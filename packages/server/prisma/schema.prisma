@@ -7,18 +7,88 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
+model User {
+  id             Int          @id @default(autoincrement())
+  email          String       @unique
+  name           String
+  password       String
+  role           String
+  profilePicture String?
+  createdAt      DateTime     @default(now())
+  assignments    Assignment[]
+  enrollments    Enrollment[]
+  submissions    Submission[]
 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+  @@map("user")
+}
+
+model Enrollment {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId Int
+
+  @@id([userId, courseId])
+  @@map("enrollment")
+}
+
+model Course {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  assignments Assignment[]
+  enrollments Enrollment[]
+
+  @@map("course")
+}
+
+model Assignment {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  dueDate     DateTime
+  createdBy   User         @relation(fields: [userId], references: [id])
+  userId      Int
+  course      Course       @relation(fields: [courseId], references: [id])
+  courseId    Int
+  submissions Submission[]
+
+  @@map("assignment")
+}
+
+model Submission {
+  id           Int        @id @default(autoincrement())
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId Int
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  content      String
+  submittedAt  DateTime   @default(now())
+  result       Result?
+
+  @@map("submission")
+}
+
+model Result {
+  id            Int         @id @default(autoincrement())
+  submission    Submission  @relation(fields: [submissionId], references: [id])
+  submissionId  Int         @unique
+  ai_percentage Float
+  isFlagged     Boolean     @default(false)
+  detectedAt    DateTime    @default(now())
+  suggestion    Suggestion?
+
+  @@map("result")
+}
+
+model Suggestion {
+  id        Int      @id @default(autoincrement())
+  result    Result   @relation(fields: [resultId], references: [id])
+  resultId  Int      @unique
+  content   String
+  createdAt DateTime @default(now())
+
+  @@map("suggestion")
+}
