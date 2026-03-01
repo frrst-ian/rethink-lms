@@ -2,8 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-app.use(express.json());
+const authRouter = require("./routes/authRouter");
 
-app.get("/", (req, res) => res.json({ message: "Hello!" }));
+app.use(express.json());
+app.use("/api/auth", authRouter);
 
 module.exports = app;
