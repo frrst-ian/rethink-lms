@@ -1,6 +1,6 @@
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
-const db = require("../db/queries");
+const db = require("../db/authModel");
 const crypto = require("crypto");
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -64,7 +64,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URI, // Change on production
+            callbackURL: process.env.GOOGLE_CALLBACK_URI,
             scope: ["profile" , "email"],
         },
         async (accessToken, refreshToken, profile, done) => {
@@ -83,6 +83,7 @@ passport.use(
                         profile.displayName,
                         email,
                         saltedPassword,
+                        null, // role
                         null, // bio
                         profilePicture,
                     );

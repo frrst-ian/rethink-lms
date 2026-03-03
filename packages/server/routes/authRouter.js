@@ -2,6 +2,7 @@ const { Router } = require("express");
 const authRouter = Router();
 const authController = require("../controllers/authController");
 const { upload } = require("../config/cloudinary");
+const passport = require("../config/passport")
 const validate = require("../middleware/validate");
 const {
     registerValidator,
@@ -16,27 +17,10 @@ authRouter.post(
     authController.postRegister,
 );
 authRouter.post("/login", loginValidator, authController.postLogin);
-
-authRouter.get(
-    "/google",
-    passport.authenticate("google", {
-        failureRedirect: "/login",
-        session: false,
-    }),
-    (req, res) => {
-        try {
-            const token = jwt.sign(
-                { userId: req.user.id, email: req.user.email },
-                process.env.JWT_SECRET,
-                { expiresIn: "7d" },
-            );
-
-            res.redirect(`https://localhost:5172/auth/callback?token=${token}`);
-        } catch (err) {
-            console.error("JWT generation error:", err);
-            res.status(500).json({ message: "Failed to generate token" });
-        }
-    },
-);
+authRouter.get("/google", passport.authenticate("google", { 
+    scope: ["profile", "email"] 
+}));
+authRouter.get("/google/callback", authController.getGoogleAuth);
+authRouter.post("/set-role", authenticateJwt, authController.postSetRole);
 
 module.exports = authRouter;

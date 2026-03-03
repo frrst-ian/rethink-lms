@@ -66,4 +66,56 @@ async function postLogin(req, res) {
     })(req, res);
 }
 
-module.exports = { postRegister, postLogin };
+async function getGoogleAuth(req, res, next) {
+    passport.authenticate(
+        "google",
+        { failureRedirect: "/login", session: false },
+        async (err, user) => {
+            if (err || !user) {
+                return res.redirect("/login");
+            }
+            try {
+                req.user = user;
+                const token = jwt.sign(
+                    {
+                        userId: req.user.id,
+                        email: req.user.email,
+                        needsOnboarding: !req.user.role,
+                    },
+                    process.env.JWT_SECRET,
+                    { expiresIn: "7d" },
+                );
+                res.redirect(
+                    `https://localhost:5172/auth/callback?token=${token}`,
+                );
+            } catch (err) {
+                console.error("JWT generation error:", err);
+                res.status(500).json({ message: "Failed to generate token" });
+            }
+        },
+    )(req, res, next);
+}
+
+async function postSetRole(req, res) {
+    const { role } = req.body;
+
+    if (!["STUDENT", "TEACHER"].includes(role)) {
+        return res.status(400).json({ error: "Invalid role" });
+    }
+
+    const user = await prisma.user.update({
+        where: { id: req.user.id },
+        data: { role },
+    });
+
+    // issue a new token with needsOnboarding: false
+    const token = jwt.sign(
+        { userId: user.id, email: user.email, needsOnboarding: false },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" },
+    );
+
+    return res.json({ token, user });
+}
+
+module.exports = { postRegister, postLogin, getGoogleAuth, postSetRole };
