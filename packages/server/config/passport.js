@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const db = require("../db/queries");
 const crypto = require("crypto");
 const LocalStrategy = require("passport-local").Strategy;
-const GithubStrategy = require("passport-github2").Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
@@ -58,53 +58,40 @@ passport.use(
     ),
 );
 
-// Github OAuth2 Strategy
+// Google OAuth2 Strategy
 passport.use(
-    new GithubStrategy(
+    new GoogleStrategy(
         {
-            clientID: process.env.GITHUB_CLIENT_ID,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: "https://project-odin-book-dime.onrender.com/api/auth/github/callback",
-            scope: ["user:email"],
-            customLogic: async (accessToken, profile) => {
-                const emailsResponse = await require("axios").get(
-                    "https://api.github.com/user/emails",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    },
-                );
-                const primaryEmail = emailsResponse.data.find(
-                    (email) => email.primary,
-                )?.email;
-                profile.emails = [{ value: primaryEmail }];
-            },
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.GOOGLE_CALLBACK_URI, // Change on production
+            scope: ["profile" , "email"],
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
                 const email = profile.emails[0].value;
                 const user = await db.getUserByEmail(email);
-                const profilePicture = profile._json.avatar_url;
+                const profilePicture = profile.photos?.[0]?.value;
+
                 const randomPassword = crypto
                     .randomBytes(Math.ceil(32 / 2))
                     .toString("hex")
                     .slice(0, 32);
                 const saltedPassword = await bcrypt.hash(randomPassword, 12);
                 if (!user) {
-                    const user = await db.createUser(
+                    const newUser = await db.createUser(
                         profile.displayName,
                         email,
                         saltedPassword,
-                        (bio = null),
+                        null, // bio
                         profilePicture,
                     );
-                    return done(null, user);
+                    return done(null, newUser);
                 }
 
                 return done(null, user);
             } catch (err) {
-                console.error("Github auth err: ", err);
+                console.error("Google auth err: ", err);
                 return done(err, false);
             }
         },
