@@ -1,0 +1,53 @@
+.btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 0.45rem;
+    padding: 0.45rem;
+    width: 100%;
+}
+
+.strippedBtn {
+    background: none;
+    color: white;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+.primary {
+    composes: btn;
+    background: var(--primary);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.primary:hover {
+    background: #7848e8;
+}
+
+.secondary {
+    composes: btn;
+    padding: 0.1rem 0.55rem;
+    background: var(--secondary);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.secondary:hover {
+    background: var(--s-background);
+}
+
+.secondaryVar2 {
+    composes: secondary;
+    background: var(--s-background);
+}
+
+.secondaryVar2:hover {
+    background: var(--primary);
+}
+
+.stripped {
+    composes: strippedBtn;
+    font-weight: bold;
+}

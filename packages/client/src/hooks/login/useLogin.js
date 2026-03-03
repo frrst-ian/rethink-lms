@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../context/UserContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { client } from "../helpers/axiosClient";
+import { client } from "../../helpers/axiosClient";
 
 export default function useLogin() {
-    const { login } = useContext(UserContext);
+    const { login } = useAuth();
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const [submitting, setSubmitting] = useState(false);

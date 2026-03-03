@@ -1,24 +1,13 @@
 import useLogin from "../../hooks/login/useLogin";
-import Button from "../Button/Button";
+import Button from "../../components/Button/Button";
 import styles from "./login.module.css";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../context/UserContext";
+import { useState } from "react";
 import { Github } from "lucide-react";
 
 export default function Login() {
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { loginUser, error, submitting } = useLogin();
-    const { loginAsGuest, user } = useContext(UserContext);
-    const [guestLoading, setGuestLoading] = useState(false);
-
-    useEffect(() => {
-        if (user && !user?.isGuest) {
-            navigate("/posts");
-        }
-    }, [user, navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,33 +16,16 @@ export default function Login() {
     };
 
     const handleOAuthLogin = (provider) => {
-        const baseUrl =  import.meta.env.VITE_API_URL;
+        const baseUrl = import.meta.env.VITE_API_URL;
         window.location.href = `${baseUrl}/auth/${provider}`;
-    };
-
-    const handleGuestLogin = async () => {
-        setGuestLoading(true);
-        const success = await loginAsGuest();
-        if (success) navigate("/posts");
-        setGuestLoading(false);
     };
 
     return (
         <>
             <div className={styles.loginContainer}>
-                <div className={styles.left}>
-                    <img
-                        src="undraw_vacation-selfie_q5bs.svg"
-                        alt="selfie svg"
-                        className={styles.selfieImg}
-                    />
-                    <p className={styles.tagline} >Join odinbook to see what we're yapping about.</p>
-                </div>
                 <div className={styles.loginFormContainer}>
                     <form className={styles.loginForm} onSubmit={handleSubmit}>
-                        <h2 className={styles.loginHeader}>
-                            Login to Odinbook
-                        </h2>
+                        <h2 className={styles.loginHeader}>Login to Rethink</h2>
                         {error && <span className={styles.error}>{error}</span>}
                         <input
                             className={styles.loginInput}
@@ -95,15 +67,7 @@ export default function Login() {
                             className={styles.btnOAuth}
                             onClick={() => handleOAuthLogin("github")}
                         >
-                            <Github /> Continue with Github
-                        </button>
-
-                        <button
-                            className={styles.btnGuest}
-                            onClick={handleGuestLogin}
-                            disabled={guestLoading}
-                        >
-                            {guestLoading ? "Loading..." : "Login as Guest"}
+                            <Github /> Continue with Google
                         </button>
 
                         <a
@@ -129,6 +93,16 @@ export default function Login() {
                             </svg>
                         </a>
                     </div>
+                </div>
+                <div className={styles.left}>
+                    <img
+                        src="undraw_vacation-selfie_q5bs.svg"
+                        alt="selfie svg"
+                        className={styles.selfieImg}
+                    />
+                    <p className={styles.tagline}>
+                        Join odinbook to see what we're yapping about.
+                    </p>
                 </div>
             </div>
         </>
