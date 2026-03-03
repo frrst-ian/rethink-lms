@@ -1,0 +1,214 @@
+.loginContainer,
+form.loginForm,
+a.btn,
+.oauthLogin,
+.left {
+    display: flex;
+}
+
+.left {
+    justify-content: center;
+    align-items: center;
+    background: #3b315c;
+    border-radius: 0.2rem;
+    flex: 1;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.loginFormContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.selfieImg {
+    width: 530px;
+}
+
+p.tagline {
+    font-weight: bold;
+    color: #ffa2a2;
+    font-size: 1.3rem;
+    margin-top: 2rem;
+}
+
+.oauthLogin {
+    gap: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    width: 350px;
+}
+
+.loginContainer {
+    height: 100vh;
+    gap: 2rem;
+    background: #1b1a26;
+}
+
+.loginHeader {
+    font-size: 2rem;
+}
+
+form.loginForm {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    width: 350px;
+    margin-bottom: 1rem;
+}
+
+.loginInput {
+    padding: 0.4rem 0.8rem;
+    background: #484854;
+    color: var(--text);
+    outline: none;
+    border: 1px solid #8c8c9b;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 38.45px;
+}
+
+.loginInput::placeholder {
+    color: var(--text);
+}
+
+.loginInput:focus {
+    border: 2px solid var(--accent);
+}
+
+a.btn {
+    gap: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem;
+    border: 0.5px solid #242425;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+
+input[type="file"] {
+    padding: 0.4rem 0.8rem;
+    background: #19191b;
+    color: var(--text);
+    outline: none;
+    border: 2px solid #494950;
+    border-radius: 0.5rem;
+}
+
+input[type="file"]::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: var(--secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    font-size: 0.9rem;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: var(--accent);
+}
+
+a.btn:hover {
+    text-decoration: underline;
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ff5959;
+    text-align: center;
+    margin-left: 0.4rem;
+}
+
+.btnOAuth {
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.45rem;
+    width: 100%;
+    background: #484854;
+    color: var(--text);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.btnOAuth:hover,
+.btnGuest:hover {
+    background: #252628;
+}
+
+.btnGuest {
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    padding: 0.45rem;
+    width: 100%;
+    background: #40823f;
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.dividerWrapper {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+hr.line {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #6a6681;
+    z-index: 950;
+    top: 0.75rem;
+}
+
+.dividerTxt {
+    z-index: 1000;
+    position: absolute;
+    background: #1b1a26;
+    padding: 0 1rem;
+    left: 10rem;
+}
+
+@media (max-width: 380px) {
+    .loginContainer {
+        font-size: 0.88rem;
+    }
+
+    .loginInput {
+        height: 34.4px;
+    }
+
+    form.loginForm {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .loginContainer {
+        padding: 1.2rem;
+    }
+
+    .oauthLogin {
+        width: 100%;
+    }
+
+    .loginHeader {
+        font-size: 1.5rem;
+    }
+}
+
+
+@media (max-width: 960px) {
+    .left {
+        display: none;
+    }
+}
