@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import useRegister from "../../hooks/register/useRegister";
 import styles from "./register.module.css";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
+import Button from "../../components/Button/Button";
+import Input from "../../components/Input/Input";
 import GoogleIcon from "@mui/icons-material/Google";
 import { CircleUserRound } from "lucide-react";
 
@@ -13,7 +13,6 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [file, setSelectedFile] = useState(null);
-    const [bio, setBio] = useState("");
 
     const [filePrev, setFilePrev] = useState(null);
 
@@ -40,7 +39,6 @@ const Register = () => {
         form.append("password", password);
         form.append("confirmPassword", confirmPassword);
         form.append("profilePicture", file);
-        form.append("bio", bio);
 
         registerUser(form);
         setFilePrev(null);
@@ -154,15 +152,6 @@ const Register = () => {
                                     </div>
                                 )}
                             </div>
-                            <input
-                                className={styles.registerInput}
-                                type="text"
-                                name="bio"
-                                value={bio}
-                                onChange={(e) => setBio(e.target.value)}
-                                placeholder="Bio"
-                                required
-                            />
 
                             <Button
                                 type="primary"

@@ -1,0 +1,27 @@
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputGroup > label {
+    align-self: start;
+}
+
+.input {
+    padding: 0.4rem 0.8rem;
+    background: #484854;
+    color: var(--text);
+    outline: none;
+    border: 1px solid #8c8c9b;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 38.45px;
+}
+
+.input::placeholder {
+    color: var(--text);
+}
+
+.input:focus {
+    border: 2px solid var(--accent);
+}

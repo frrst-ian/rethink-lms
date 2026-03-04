@@ -1,12 +1,12 @@
-import styles from "./button.module.css";
+import styles from "./input.module.css";
 
 const Input = ({ type = "text", name, value, onChange, placeholder, required, autoComplete, label }) => {
     return (
-        <div>
+        <div className={styles.inputGroup} >
             {label && <label htmlFor={name}>{label}</label>}
             <input
                 id={name}          
-                className={styles.nput}
+                className={styles.input}
                 type={type}
                 name={name}
                 value={value}
