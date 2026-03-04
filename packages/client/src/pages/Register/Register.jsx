@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import useRegister from "../../hooks/register/useRegister";
 import styles from "./register.module.css";
-import Button from "../Button/Button";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import GoogleIcon from "@mui/icons-material/Google";
 import { CircleUserRound } from "lucide-react";
 
 const Register = () => {
@@ -78,50 +80,42 @@ const Register = () => {
                                     ))}
                                 </div>
                             )}
-                            <input
-                                className={styles.registerInput}
-                                type="Full name"
-                                title="Full name"
+                            <Input
                                 name="name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 autoComplete="name"
-                                placeholder="Name"
+                                label="Full Name"
                                 required
                             />
-                            <input
-                                className={styles.registerInput}
+
+                            <Input
                                 type="email"
-                                title="Email"
                                 name="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 autoComplete="email"
-                                placeholder="Email"
+                                label="Email"
                                 required
                             />
-                            <input
-                                className={styles.registerInput}
+                            <Input
                                 type="password"
-                                title="Password"
                                 name="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 autoComplete="current-password"
-                                placeholder="Password"
+                                label="Password"
                                 required
                             />
-                            <input
-                                className={styles.registerInput}
+                            <Input
                                 type="password"
-                                title="Confirm password"
                                 name="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) =>
                                     setConfirmPassword(e.target.value)
                                 }
                                 autoComplete="current-password"
-                                placeholder="Confirm password"
+                                label="Confirm Password"
                                 required
                             />
                         </div>
@@ -186,9 +180,9 @@ const Register = () => {
                         </div>
                         <button
                             className={styles.btnOAuth}
-                            onClick={() => handleOAuthLogin("github")}
+                            onClick={() => handleOAuthLogin("google")}
                         >
-                            Continue with Google
+                            <GoogleIcon /> Continue with Google
                         </button>
 
                         <a

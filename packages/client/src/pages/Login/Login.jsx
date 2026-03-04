@@ -1,8 +1,9 @@
 import useLogin from "../../hooks/login/useLogin";
-import Button from "../../components/Button/Button";
+import Button from "../../components/Button;";
+import Input from "../../components/Input";
 import styles from "./login.module.css";
 import { useState } from "react";
-import { Github } from "lucide-react";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -27,27 +28,23 @@ export default function Login() {
                     <form className={styles.loginForm} onSubmit={handleSubmit}>
                         <h2 className={styles.loginHeader}>Login to Rethink</h2>
                         {error && <span className={styles.error}>{error}</span>}
-                        <input
-                            className={styles.loginInput}
+
+                        <Input
                             type="email"
-                            title="Email"
                             name="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             autoComplete="email"
-                            placeholder="Email"
+                            label="Email"
                             required
                         />
-
-                        <input
-                            className={styles.loginInput}
+                        <Input
                             type="password"
-                            title="Password"
                             name="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             autoComplete="current-password"
-                            placeholder="Password"
+                            label="Password"
                             required
                         />
 
@@ -65,9 +62,9 @@ export default function Login() {
                     <div className={styles.oauthLogin}>
                         <button
                             className={styles.btnOAuth}
-                            onClick={() => handleOAuthLogin("github")}
+                            onClick={() => handleOAuthLogin("google")}
                         >
-                            <Github /> Continue with Google
+                            <GoogleIcon /> Continue with Google
                         </button>
 
                         <a
