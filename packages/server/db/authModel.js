@@ -1,13 +1,12 @@
 const prisma = require("../lib/prisma");
 
-async function createUser(name, email, password, role, bio, profilePicture) {
+async function createUser(name, email, password, role, profilePicture) {
     const user = await prisma.user.create({
         data: {
             name: name,
             email: email,
             password: password,
             role: role,
-            bio: bio,
             profilePicture: profilePicture,
         },
         select: {

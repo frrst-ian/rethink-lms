@@ -84,7 +84,6 @@ passport.use(
                         email,
                         saltedPassword,
                         null, // role
-                        null, // bio
                         profilePicture,
                     );
                     return done(null, newUser);
