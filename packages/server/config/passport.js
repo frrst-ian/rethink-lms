@@ -46,7 +46,7 @@ passport.use(
         },
         async (payload, done) => {
             try {
-                const user = await db.getUserByID(payload.userId);
+                const user = await db.getUserById(payload.userId);
                 if (user) {
                     return done(null, user);
                 }
