@@ -34,10 +34,13 @@ app.use(
 
 
 const authRouter = require("./routes/authRouter");
+const courseRouter = require("./routes/courseRouter");
 const errorHandler = require("./middleware/errorHandler");
 
 app.use(express.json());
 app.use("/api/auth", authRouter);
+app.use("/api/courses", courseRouter);
+
 
 app.use(errorHandler);
 

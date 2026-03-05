@@ -25,7 +25,7 @@ async function postRegister(req, res) {
         profilePicture,
     );
     const token = jwt.sign(
-        { userId: user.id, email: user.email },
+        { userId: user.id, email: user.email},
         process.env.JWT_SECRET,
         { expiresIn: "14d" },
     );
@@ -49,7 +49,7 @@ async function postLogin(req, res) {
         }
 
         const token = jwt.sign(
-            { userId: user.id, email: user.email },
+            { userId: user.id, email: user.email},
             process.env.JWT_SECRET,
             { expiresIn: "7d" },
         );

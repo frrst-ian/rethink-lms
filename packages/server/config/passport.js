@@ -47,9 +47,7 @@ passport.use(
         async (payload, done) => {
             try {
                 const user = await db.getUserById(payload.userId);
-                if (user) {
-                    return done(null, user);
-                }
+                if (user) return done(null, user);
                 return done(null, false);
             } catch (err) {
                 return done(err, false);
@@ -65,7 +63,7 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URI,
-            scope: ["profile" , "email"],
+            scope: ["profile", "email"],
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
