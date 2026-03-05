@@ -13,16 +13,12 @@ const useOAuthCallback = () => {
 
         if (!token) return navigate("/login");
 
-        const payload = JSON.parse(atob(token.split('.')[1]));
-
-        handleOAuthCallback(token)
-            .then(() => {
-                payload.needsOnboarding
-                    ? navigate("/onboard")
-                    : navigate("/dashboard");
-            })
-            .catch(() => navigate("/login"));
-
+        try {
+            const needsOnboarding = handleOAuthCallback(token);
+            needsOnboarding ? navigate("/onboard") : navigate("/dashboard");
+        } catch {
+            navigate("/login");
+        }
     }, [location, navigate, handleOAuthCallback]);
 };
 

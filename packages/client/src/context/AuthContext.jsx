@@ -6,14 +6,17 @@ import {
     useRef,
     useContext,
 } from "react";
-import { client } from "../helpers/axiosClient";
 
 const AuthContext = createContext();
 
+const decodeToken = (token) => {
+    return JSON.parse(atob(token.split(".")[1]));
+};
+
 const isTokenExpired = (token) => {
     try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload.exp * 1000 < Date.now();
+        const { exp } = decodeToken(token);
+        return exp * 1000 < Date.now();
     } catch {
         return true;
     }
@@ -68,16 +71,17 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     const handleOAuthCallback = useCallback(
-        async (token) => {
-            try {
-                const { data } = await client.get("/u/profile", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                login(token, data);
-            } catch (error) {
-                console.error("OAuth callback error:", error);
-                throw error;
-            }
+        (token) => {
+            const {
+                userId,
+                email,
+                name,
+                role,
+                profilePicture,
+                needsOnboarding,
+            } = decodeToken(token);
+            login(token, { id: userId, email, name, role, profilePicture });
+            return needsOnboarding;
         },
         [login],
     );
@@ -91,5 +95,6 @@ const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 export { AuthProvider };

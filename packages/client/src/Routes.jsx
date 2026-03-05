@@ -14,7 +14,7 @@ const AppRoutes = () => {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="/onboard" element={<Onboard />} />
-            <Route path="auth/callback" element={<OAuthCallback />} />
+            <Route path="/auth/callback" element={<OAuthCallback />} />
         </Routes>
     );
 };
