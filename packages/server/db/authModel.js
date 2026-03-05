@@ -27,6 +27,19 @@ async function getUserByEmail(email) {
     });
 }
 
+async function updateUserRole(id, role) {
+    return await prisma.user.update({
+        where: { id },
+        data: { role },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            profilePicture: true,
+        },
+    });
+}
 async function getUserById() {}
 
-module.exports = { createUser, getUserByEmail, getUserById };
+module.exports = { createUser, getUserByEmail, getUserById, updateUserRole };

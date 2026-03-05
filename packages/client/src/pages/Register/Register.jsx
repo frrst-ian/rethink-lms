@@ -12,6 +12,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [role, setRole] = useState("STUDENT");
     const [file, setSelectedFile] = useState(null);
 
     const [filePrev, setFilePrev] = useState(null);
@@ -38,6 +39,8 @@ const Register = () => {
         form.append("email", email);
         form.append("password", password);
         form.append("confirmPassword", confirmPassword);
+        form.append("role", role);
+
         form.append("profilePicture", file);
 
         registerUser(form);
@@ -116,6 +119,19 @@ const Register = () => {
                                 label="Confirm Password"
                                 required
                             />
+                            <div className={styles.roleGroup}>
+                                {["STUDENT", "TEACHER"].map((r) => (
+                                    <label key={r}>
+                                        <input
+                                            type="radio"
+                                            value={r}
+                                            checked={role === r}
+                                            onChange={() => setRole(r)}
+                                        />
+                                        {r.charAt(0) + r.slice(1).toLowerCase()}
+                                    </label>
+                                ))}
+                            </div>
                         </div>
                         <div className={styles.right}>
                             <div className={styles.pfpWrapper}>

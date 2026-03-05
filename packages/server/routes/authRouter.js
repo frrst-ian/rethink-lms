@@ -24,7 +24,7 @@ authRouter.get(
         scope: ["profile", "email"],
     }),
 );
-authRouter.get("/google/callback", authController.getGoogleAuth);
+authRouter.get("/google/callback",passport.authenticate("google", { failureRedirect: "/login", session: false }), authController.getGoogleAuth);
 authRouter.post("/set-role", authenticateJwt, authController.postSetRole);
 
 module.exports = authRouter;
