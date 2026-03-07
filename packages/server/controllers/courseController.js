@@ -19,4 +19,11 @@ async function createCourse(req, res) {
     return res.status(201).json(newCourse);
 }
 
-module.exports = { getAllCourses, getCourseById, createCourse };
+async function enrollStudent(req, res) {
+    const userId = parseInt(req.user.id);
+    const courseId = parseInt(req.params.id);
+
+    await db.enrollStudent(userId, courseId);
+}
+
+module.exports = { getAllCourses, getCourseById, createCourse, enrollStudent };

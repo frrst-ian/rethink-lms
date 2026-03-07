@@ -40,4 +40,13 @@ async function createCourse(title, description, userId) {
     return newCourse;
 }
 
-module.exports = { getAllCourses, getCourseById, createCourse };
+async function enrollStudent(userId, courseId) {
+    await prisma.enrollment.create({
+        data: {
+            userId,
+            courseId,
+        },
+    });
+}
+
+module.exports = { getAllCourses, getCourseById, createCourse, enrollStudent };

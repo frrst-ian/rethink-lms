@@ -22,5 +22,12 @@ courseRouter.post(
     requireRole("teacher"),
     courseController.createCourse,
 );
+courseRouter.post(
+    "/:id/enroll",
+    authenticateJwt,
+    requireRole("student"),
+    courseController.enrollStudent,
+);
+
 
 module.exports = courseRouter;
