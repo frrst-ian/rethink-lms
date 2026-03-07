@@ -1,21 +1,21 @@
 const db = require("../db/authModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { uploadToCloudinary } = require("../config/cloudinary");
 const passport = require("../config/passport");
+const { createAvatar } = require("@dicebear/core");
+const { initials, thumbs, shapes } = require("@dicebear/collection");
 
 async function postRegister(req, res) {
     const { name, email, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    let profilePicture = null;
-    if (req.file) {
-        const result = await uploadToCloudinary(
-            req.file.buffer,
-            req.file.mimetype,
-        );
-        profilePicture = result.secure_url;
-    }
+    const avatar = createAvatar(initials, {
+        seed: email,
+        size: 200,
+        backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
+    });
+
+    const profilePicture = avatar.toDataUri();
 
     const user = await db.createUser(
         name,
@@ -24,8 +24,9 @@ async function postRegister(req, res) {
         role,
         profilePicture,
     );
+
     const token = jwt.sign(
-        { userId: user.id, email: user.email},
+        { userId: user.id, email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: "14d" },
     );
@@ -49,7 +50,7 @@ async function postLogin(req, res) {
         }
 
         const token = jwt.sign(
-            { userId: user.id, email: user.email},
+            { userId: user.id, email: user.email },
             process.env.JWT_SECRET,
             { expiresIn: "7d" },
         );
@@ -91,7 +92,6 @@ async function postSetRole(req, res) {
 
     const user = await db.updateUserRole(req.user.id, role);
 
-    // issue a new token with needsOnboarding: false
     const token = jwt.sign(
         { userId: user.id, email: user.email, needsOnboarding: false },
         process.env.JWT_SECRET,
