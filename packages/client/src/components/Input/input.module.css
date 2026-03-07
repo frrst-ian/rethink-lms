@@ -1,6 +1,7 @@
 .inputGroup {
     display: flex;
     flex-direction: column;
+    gap: 0.4rem;
 }
 
 .inputGroup > label {
@@ -9,10 +10,10 @@
 
 .input {
     padding: 0.4rem 0.8rem;
-    background: #484854;
+    background: #121419;
     color: var(--text);
     outline: none;
-    border: 1px solid #8c8c9b;
+    border: none ;
     border-radius: 0.5rem;
     width: 100%;
     height: 38.45px;
@@ -23,5 +24,10 @@
 }
 
 .input:focus {
-    border: 2px solid var(--accent);
+    border: 2px solid #6d48c4 ;
+}
+
+label {
+    display: flex;
+    gap: 0.3rem;
 }

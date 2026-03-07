@@ -77,10 +77,10 @@ h6 {
 :root {
   --text: #e4eaeb;
   --text2: #c1bed1;
-  --background: #101011;
+  --background: #1e212d;
   --s-background: #1b1c23;
   --hover-bg: #292f3b;
-  --primary: #8b5cf6;
-  --secondary: #5f30cc;
-  --accent: #3960ae;
+  --primary: #29929d;
+  --secondary: #6d48c4;
+  --accent: #ef517a;
 }

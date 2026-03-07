@@ -8,7 +8,10 @@ a.btn,
 .registerContainer {
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 3rem 0;
     width: 100%;
+    min-height: 100vh;
 }
 
 .registerFormContainer {
@@ -19,62 +22,47 @@ a.btn,
     background: #1b1a26;
     border-radius: 1rem;
     padding: 1rem;
-    width: 700px;
+    width: 575px;
 }
 
-.left {
+.formContent {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     flex: 1;
-    padding: 2rem;
+    padding: 2.5rem 2.5rem 1rem 2.5rem;
     border-radius: 1rem;
-}
-
-.right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
-    padding: 2rem;
-    border-radius: 1rem;
-    justify-content: center;
-    align-items: center;
-    margin-top: auto;
 }
 
 .oauthLogin {
     gap: 1rem;
     flex-direction: column;
+    width: 540px;
+    padding: 0 2.5rem;
     justify-content: center;
-}
-
-.registerContainer {
-    align-items: center;
-    height: 100vh;
 }
 
 .registerHeader {
     font-size: 1.4rem;
 }
 
-.oauthLogin {
-    gap: 1rem;
-}
-
 form.registerForm {
     text-align: center;
-    padding: 1rem;
     flex: 1;
     width: 100%;
+    flex-direction: column;
+}
+
+.roleGroup {
+    font-size: 1.2rem;
 }
 
 a.btn {
     gap: 0.8rem;
     justify-content: center;
     align-items: center;
-    padding: 0.4rem;
-    border: 0.5px solid #242425;
+    padding: 0.4rem 0.7rem;
+    border: 0.8px solid #3b4251;
     border-radius: 0.5rem;
     width: 100%;
 }
@@ -96,85 +84,43 @@ a.btn:hover {
     border: none;
     cursor: pointer;
     border-radius: 0.5rem;
-    padding: 0.45rem;
+    padding: 0.5rem 0.45rem;
     width: 100%;
     background: #484854;
     color: var(--text);
     transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem;
+    background: #121419;
 }
 
 .btnOAuth:hover {
-    background: #252628;
+    background: #28303f;
 }
 
-.dividerWrapper {
-    position: relative;
-    margin-bottom: 1.2rem;
+.oauthLogin > p {
+   text-align: center;
 }
 
-hr.line {
-    position: absolute;
-    width: 100%;
-    border: 1px solid #6a6681;
-    z-index: 950;
-    top: 0.75rem;
-}
+input[type="radio"] {
+    appearance: none;
 
-.dividerTxt {
-    z-index: 1000;
-    position: absolute;
-    background: #1b1a26;
-    padding: 0 1rem;
-    left: 7.3rem;
-}
-
-.pfpWrapper {
-    position: relative;
-}
-
-.fileUpload {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-.customFileUpload {
-    position: absolute;
-    bottom: 0.7rem;
-    left: 0.9rem;
-    cursor: pointer;
-}
-
-.pfpSvg {
-    width: 120px;
-    height: 120px;
-    cursor: pointer;
-}
-
-.closeBtn {
-    position: absolute;
-    left: 5.7rem;
-    background: #acafc1;
-    color: #0f0e0f;
-    border: none;
     border-radius: 50%;
-    cursor: pointer;
-    top: 0;
-    width: 24px;
-    text-align: center;
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid #999999;
+    transition: 0.2s all linear;
+    margin-right: 5px;
+
+    position: relative;
+    top: 5px;
 }
 
-.imgPrev {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    bottom: 0.2rem;
-    object-fit: cover;
-    border-radius: 50%;
+input:checked {
+    border: 10px solid #f53f7d;
 }
 
 @media (max-width: 720px) {
@@ -204,38 +150,11 @@ hr.line {
         display: block;
     }
 
-    .left {
-        padding: 0;
-    }
-
-    .right {
+    .formContent {
         padding: 0;
     }
 
     .registerInput {
         height: 30px;
     }
-
-    .pfpSvg {
-        width: 90px;
-        height: 90px;
-    }
-
-    .pfpWrapper {
-        margin-top: 1rem;
-    }
-
-    .dividerTxt {
-        left:6.5rem;
-    }
-
-    .imgPrev {
-        width: 90px;
-        height: 90px;
-    }
-
-    .closeBtn {
-        left: 4.5rem;
-    }
-
 }

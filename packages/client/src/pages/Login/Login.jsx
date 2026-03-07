@@ -4,6 +4,7 @@ import Input from "../../components/Input/Input";
 import styles from "./login.module.css";
 import { useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
+import { AtSign, Lock } from "lucide-react";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -36,6 +37,7 @@ export default function Login() {
                             onChange={(e) => setEmail(e.target.value)}
                             autoComplete="email"
                             label="Email"
+                            icon={AtSign}
                             required
                         />
                         <Input
@@ -45,6 +47,7 @@ export default function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                             autoComplete="current-password"
                             label="Password"
+                            icon={Lock}
                             required
                         />
 
@@ -93,12 +96,12 @@ export default function Login() {
                 </div>
                 <div className={styles.left}>
                     <img
-                        src="undraw_vacation-selfie_q5bs.svg"
-                        alt="selfie svg"
+                        src="reading.svg"
+                        alt="a person reading"
                         className={styles.selfieImg}
                     />
                     <p className={styles.tagline}>
-                        Join odinbook to see what we're yapping about.
+                        Join Rethink to Experience an AI-Driven LMS.
                     </p>
                 </div>
             </div>
