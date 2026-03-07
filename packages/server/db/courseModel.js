@@ -6,7 +6,13 @@ async function getAllCourses() {
             createdBy: {
                 select: {
                     name: true,
-                    password: false,
+                    email: true,
+                    profilePicture: true,
+                },
+            },
+            _count: {
+                select: {
+                    enrollments: true,
                 },
             },
         },
@@ -17,6 +23,39 @@ async function getAllCourses() {
 async function getCourseById(id) {
     const course = await prisma.course.findUnique({
         where: { id },
+        include: {
+            createdBy: {
+                select: {
+                    name: true,
+                    email: true,
+                    profilePicture: true,
+                },
+            },
+            assignments: {
+                select: {
+                    id: true,
+                    title: true,
+                    dueDate: true,
+                },
+            },
+            enrollments: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            profilePicture: true,
+                        },
+                    },
+                },
+            },
+            _count: {
+                select: {
+                    enrollments: true,
+                },
+            },
+        },
     });
     return course;
 }
@@ -24,15 +63,16 @@ async function getCourseById(id) {
 async function createCourse(title, description, userId) {
     const newCourse = await prisma.course.create({
         data: {
-            title: title,
-            description: description,
-            userId: userId,
+            title,
+            description,
+            userId,
         },
         include: {
             createdBy: {
                 select: {
                     name: true,
-                    password: false,
+                    email: true,
+                    profilePicture: true,
                 },
             },
         },
@@ -40,8 +80,19 @@ async function createCourse(title, description, userId) {
     return newCourse;
 }
 
+async function checkEnrollment(userId, courseId) {
+    return await prisma.enrollment.findUnique({
+        where: {
+            userId_courseId: {
+                userId,
+                courseId,
+            },
+        },
+    });
+}
+
 async function enrollStudent(userId, courseId) {
-    await prisma.enrollment.create({
+    return await prisma.enrollment.create({
         data: {
             userId,
             courseId,
@@ -49,4 +100,10 @@ async function enrollStudent(userId, courseId) {
     });
 }
 
-module.exports = { getAllCourses, getCourseById, createCourse, enrollStudent };
+module.exports = {
+    getAllCourses,
+    getCourseById,
+    createCourse,
+    enrollStudent,
+    checkEnrollment,
+};
