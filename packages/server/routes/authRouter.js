@@ -15,13 +15,21 @@ authRouter.post(
     validate,
     authController.postRegister,
 );
-authRouter.post("/login", loginValidator, authController.postLogin);
+
+authRouter.post(
+    "/login",
+    passport.authenticate("local", { session: false, failWithError: true }),
+    loginValidator,
+    authController.postLogin,
+);
+
 authRouter.get(
     "/google",
     passport.authenticate("google", {
         scope: ["profile", "email"],
     }),
 );
+
 authRouter.get(
     "/google/callback",
     passport.authenticate("google", {
@@ -30,6 +38,7 @@ authRouter.get(
     }),
     authController.getGoogleAuth,
 );
+
 authRouter.post("/set-role", authenticateJwt, authController.postSetRole);
 
 module.exports = authRouter;

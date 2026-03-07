@@ -10,25 +10,21 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 // Passport local strategy
 passport.use(
     new LocalStrategy(
-        { usernameField: "email", passReqToCallback: true },
-        async (req, email, password, done) => {
+        { usernameField: "email" },
+        async (email, password, done) => {
             try {
                 const user = await db.getUserByEmail(email);
-                req.user = user;
-
                 if (!user) {
                     return done(null, false, {
-                        error: "Incorrect email",
+                        message: "Incorrect email or password",
                     });
                 }
-
                 const match = await bcrypt.compare(password, user.password);
                 if (!match) {
                     return done(null, false, {
-                        error: "Incorrect password",
+                        message: "Incorrect email or password",
                     });
                 }
-
                 return done(null, user);
             } catch (err) {
                 return done(err);

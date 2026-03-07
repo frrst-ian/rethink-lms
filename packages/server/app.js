@@ -41,7 +41,6 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
 
-
 app.use(errorHandler);
 
 module.exports = app;
