@@ -12,4 +12,11 @@ async function getCourseById(req, res) {
     return res.json(course);
 }
 
-module.exports = { getAllCourses, getCourseById };
+async function createCourse(req, res) {
+    const { title, description } = req.body;
+    const id = parseInt(req.user.id);
+    const newCourse = await db.createCourse(title, description, id);
+    return res.status(201).json(newCourse);
+}
+
+module.exports = { getAllCourses, getCourseById, createCourse };

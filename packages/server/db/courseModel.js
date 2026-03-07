@@ -21,4 +21,23 @@ async function getCourseById(id) {
     return course;
 }
 
-module.exports = { getAllCourses, getCourseById };
+async function createCourse(title, description, userId) {
+    const newCourse = await prisma.course.create({
+        data: {
+            title: title,
+            description: description,
+            userId: userId,
+        },
+        include: {
+            createdBy: {
+                select: {
+                    name: true,
+                    password: false,
+                },
+            },
+        },
+    });
+    return newCourse;
+}
+
+module.exports = { getAllCourses, getCourseById, createCourse };
