@@ -18,7 +18,7 @@ model User {
   assignments    Assignment[]
   enrollments    Enrollment[]
   submissions    Submission[]
-  course         Course[]     @relation("Cu)
+  course         Course[]     @relation("CourseCreator")
 
   @@map("user")
 }
@@ -37,8 +37,6 @@ model Course {
   id          Int          @id @default(autoincrement())
   title       String
   description String?
-  startDate   DateTime
-  endDate     DateTime
   createdBy   User         @relation("CourseCreator", fields: [userId], references: [id])
   userId      Int
   assignments Assignment[]
