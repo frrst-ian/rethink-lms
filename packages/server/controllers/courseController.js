@@ -22,7 +22,7 @@ async function createCourse(req, res) {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     if (!title?.trim()) {
-        return res.status(400).json({ error: "Title is required" });
+        return res.status(400).json({ errors: ["Title is required"] });
     }
 
     const userId = req.user.id;
@@ -47,7 +47,7 @@ async function enrollStudent(req, res) {
     if (existingEnrollment) {
         return res
             .status(409)
-            .json({ error: "Already enrolled in this course" });
+            .json({ errors: ["Already enrolled in this course"] });
     }
 
     await db.enrollStudent(userId, courseId);
@@ -59,4 +59,47 @@ async function enrollStudent(req, res) {
     });
 }
 
-module.exports = { getAllCourses, getCourseById, createCourse, enrollStudent };
+async function getAssignmentById(req, res) {
+    const courseId = validateId(req.params.courseId, "Course ID");
+
+    const id = validateId(req.params.id, "ID");
+
+    const assignment = await db.getAssignmentById(courseId, id);
+
+    ensureExists(assignment, "Assignment");
+
+    return res.json(assignment);
+}
+
+async function createAssignment(req, res) {
+    const { title, description, dueDate } = req.body;
+    const courseId = validateId(req.params.courseId, "Course ID");
+
+    const userId = req.user.id;
+
+    if (!title?.trim()) {
+        return res.status(400).json({ errors: ["Title is required"] });
+    }
+
+    if (!description?.trim()) {
+        return res.status(400).json({ errors: ["Description is required"] });
+    }
+
+    const newAssignment = await db.createAssignment(
+        title.trim(),
+        description.trim(),
+        dueDate,
+        courseId,
+        userId,
+    );
+    return res.status(201).json(newAssignment);
+}
+
+module.exports = {
+    getAllCourses,
+    getCourseById,
+    createCourse,
+    enrollStudent,
+    getAssignmentById,
+    createAssignment,
+};

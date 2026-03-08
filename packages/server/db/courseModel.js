@@ -109,10 +109,34 @@ async function enrollStudent(userId, courseId) {
     });
 }
 
+async function getAssignmentById(courseId, id) {
+    return await prisma.assignment.findUnique({
+        where: {
+            courseId: courseId,
+            id: id,
+        },
+    });
+}
+
+async function createAssignment(title, description, dueDate, courseId, userId) {
+    const newCourse = await prisma.assignment.create({
+        data: {
+            title,
+            description,
+            dueDate,
+            courseId,
+            userId,
+        },
+    });
+    return newCourse;
+}
+
 module.exports = {
     getAllCourses,
     getCourseById,
     createCourse,
     enrollStudent,
     checkEnrollment,
+    getAssignmentById,
+    createAssignment,
 };

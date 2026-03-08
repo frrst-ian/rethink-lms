@@ -32,14 +32,18 @@ app.use(
     }),
 );
 
-
 const authRouter = require("./routes/authRouter");
 const courseRouter = require("./routes/courseRouter");
+const assignmentRouter = require("./routes/assignmentRouter");
+const submissionRouter = require("./routes/submissionRouter");
+
 const errorHandler = require("./middleware/errorHandler");
 
 app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
+app.use("/api/assignments", assignmentRouter);
+app.use("/api/submissions", submissionRouter);
 
 app.use(errorHandler);
 

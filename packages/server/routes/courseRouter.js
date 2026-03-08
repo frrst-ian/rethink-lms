@@ -28,6 +28,17 @@ courseRouter.post(
     requireRole("student"),
     courseController.enrollStudent,
 );
-
+courseRouter.get(
+    "/:courseId/assignments/:id",
+    authenticateJwt,
+    requireRole("student", "teacher"),
+    courseController.getAssignmentById,
+);
+courseRouter.post(
+    "/:courseId/assignments",
+    authenticateJwt,
+    requireRole("teacher"),
+    courseController.createAssignment,
+);
 
 module.exports = courseRouter;
