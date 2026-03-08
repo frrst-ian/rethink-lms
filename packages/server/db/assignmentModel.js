@@ -27,4 +27,19 @@ async function submitAssignment(content, assignmentId, userId) {
     });
 }
 
-module.exports = { getAllSubmissions, getStudentSubmission, submitAssignment };
+async function createResult(submissionId, ai_percentage, isFlagged) {
+    return await prisma.result.create({
+        data: {
+            submissionId,
+            ai_percentage: parseFloat((ai_percentage * 100).toFixed(2)),
+            isFlagged,
+        },
+    });
+}
+
+module.exports = {
+    getAllSubmissions,
+    getStudentSubmission,
+    submitAssignment,
+    createResult,
+};
