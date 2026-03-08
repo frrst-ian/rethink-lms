@@ -9,9 +9,17 @@ async function postRegister(req, res) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const avatar = createAvatar(initials, {
-        seed: email,
+        seed: name,
         size: 200,
-        backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
+        backgroundColor: [
+            "00897b",
+            "ffb300",
+            "5e35b1",
+            "1e88e5",
+            "d81b60",
+            "8e24aa",
+        ],
+        backgroundType: ["solid", "gradientLinear"],
     });
 
     const profilePicture = avatar.toDataUri();

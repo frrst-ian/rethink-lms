@@ -55,7 +55,6 @@
 .viewBtn {
     composes: btn;
     composes: primary;
-    width: 200px;
-    margin-top: .8rem;
-
+    width: 100%;
+    margin-top: 0.8rem;
 }
