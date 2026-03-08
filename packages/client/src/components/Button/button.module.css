@@ -51,3 +51,11 @@
     composes: strippedBtn;
     font-weight: bold;
 }
+
+.viewBtn {
+    composes: btn;
+    composes: primary;
+    width: 200px;
+    margin-top: .5rem;
+
+}

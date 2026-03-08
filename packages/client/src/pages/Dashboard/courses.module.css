@@ -1,0 +1,16 @@
+.coursesWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 2rem 2rem 15rem;
+}
+
+.coursesWrapper > h1 {
+    font-size: 2.3rem;
+}
+
+.courses {
+    min-height: 675px;
+    background: var(--s-background);
+}

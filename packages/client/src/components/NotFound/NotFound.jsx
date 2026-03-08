@@ -13,7 +13,7 @@ export default function NotFound() {
                     task={() => navigate("/dashboard")}
                 ></Button>
                 <h4>404 PAGE NOT FOUND</h4>
-                <img src="undraw_taken_mshk.svg" alt="Not Found BRO" />
+                <img src="/undraw_taken_mshk.svg" alt="Not Found BRO" />
             </div>
         </div>
     );

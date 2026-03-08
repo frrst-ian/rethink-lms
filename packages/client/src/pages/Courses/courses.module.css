@@ -1,0 +1,64 @@
+.coursesWrapper,
+.courses,
+.course {
+    display: flex;
+    flex-direction: column;
+}
+
+.section,
+.teacherInfo,
+.enrolled,
+.code {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.coursesWrapper {
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 2rem 2rem 2rem 6rem;
+}
+
+.coursesWrapper > h1 {
+    font-size: 2.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--c-color);
+}
+
+.courses {
+    min-height: 675px;
+
+    background: var(--s-background);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.course {
+    background: var(--background);
+    border-radius: 0.6rem;
+    padding: 1rem;
+    gap: .4rem;
+    color: var(--c-color);
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 500;
+    font-family: "Roboto";
+    color: #5383df;
+}
+
+.teacherInfo > img {
+    border-radius: 50%;
+}
+
+.section {
+    font-weight: 500;
+}
+
+.viewBtn {
+    width: 170px;
+    margin-top: .8rem;
+}

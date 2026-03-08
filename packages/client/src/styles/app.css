@@ -1,8 +1,23 @@
-@import url("https://fonts.googleapis.com/css?family=Funnel%20Sans:700|Funnel%20Sans:400");
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@font-face {
+    font-family: "Inter";
+    src:
+        url("/fonts/inter-regular-webfont.woff2") format("woff2"),
+        url("/fonts/inter-regular-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src:
+        url("/fonts/roboto-regular-webfont.woff2") format("woff2"),
+        url("/fonts/roboto-regular-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
 
 body {
-    font-family: "Funnel Sans";
+    font-family: "Inter";
     font-weight: 400;
 }
 
@@ -11,7 +26,7 @@ h2,
 h3,
 h4,
 h5 {
-    font-family: "Jetbrains Mono" , monospace;
+    font-family: "Roboto";
     font-weight: 700;
 }
 
@@ -59,6 +74,7 @@ a {
 .main {
     background: var(--background);
     color: var(--text);
+    transition: padding-left 0.22s ease;
 }
 
 .loading {

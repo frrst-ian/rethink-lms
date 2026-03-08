@@ -1,6 +1,8 @@
 import useCourses from "../../hooks/dashboard/useCourses";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import styles from "./courses.module.css"
+import Button from "../../components/Button/Button";
+import styles from "./courses.module.css";
+import { SquareLibrary } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function Courses() {
     const { courses, errors, loading } = useCourses();
@@ -11,15 +13,17 @@ export default function Courses() {
 
     return (
         <>
-            <Sidebar />
             <div className={styles.coursesWrapper}>
                 <h1>My Courses</h1>
-                <div className="courses">
+                <div className={styles.courses}>
                     {courses.map((c) => (
-                        <div key={c.id} className="course">
-                            <p>{c.title}</p>
-                            <p>{c.section}</p>
-                            <div className="teacherInfo">
+                        <div key={c.id} className={styles.course}>
+                            <p className={styles.title}>{c.title}</p>
+                            <div className={styles.section}>
+                                <SquareLibrary />
+                                <p>{c.section}</p>
+                            </div>
+                            <div className={styles.teacherInfo}>
                                 {c.createdBy.profilePicture && (
                                     <img
                                         src={c.createdBy.profilePicture}
@@ -29,8 +33,9 @@ export default function Courses() {
                                 )}
                                 <p>{c.createdBy.name}</p>
                             </div>
-                            <p>{c._count.enrollments} Students Enrolled</p>
-                            <p>Invitation Code: {c.code}</p>
+                            <NavLink to={`/courses/${c.id}`}>
+                                <Button type="viewBtn" label="View Course" />
+                            </NavLink>
                         </div>
                     ))}
                 </div>

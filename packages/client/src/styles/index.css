@@ -77,10 +77,16 @@ h6 {
 :root {
   --text: #e4eaeb;
   --text2: #c1bed1;
+  --text-sidebar: #8391ac;
   --background: #1e212d;
-  --s-background: #1b1c23;
+  --s-background: #111419;
   --hover-bg: #292f3b;
-  --primary: #29929d;
+  --primary: #306fdc;
   --secondary: #6d48c4;
   --accent: #ef517a;
+  --sidebar-item-bg: #243a5f;
+  --sidebar-color: #5c73f6;
+  --sidebar-hover: #292f45;
+  --c-color: #b2c2d6;
+  --c-color2: #5067e9;
 }

@@ -4,7 +4,7 @@ import Login from "./pages/Login/Login";
 import OAuthCallback from "./pages/OAuthCallback/OAuthCallback";
 import NotFound from "./components/NotFound/NotFound";
 import Onboard from "./pages/Onboard/Onboard";
-import Courses from "./pages/Dashboard/Courses";
+import Courses from "./pages/Courses/Courses";
 import ProtectedRoute from "./components/Utils/ProtectedRoutes";
 
 const AppRoutes = () => {
@@ -24,6 +24,14 @@ const AppRoutes = () => {
 
             <Route
                 path="dashboard"
+                element={
+                    <ProtectedRoute>
+                        <Courses />
+                    </ProtectedRoute>
+                }
+            />
+             <Route
+                path="courses"
                 element={
                     <ProtectedRoute>
                         <Courses />
