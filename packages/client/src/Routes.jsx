@@ -5,7 +5,9 @@ import OAuthCallback from "./pages/OAuthCallback/OAuthCallback";
 import NotFound from "./components/NotFound/NotFound";
 import Onboard from "./pages/Onboard/Onboard";
 import Courses from "./pages/Courses/Courses";
+import Course from "./pages/Course/Course";
 import ProtectedRoute from "./components/Utils/ProtectedRoutes";
+import Layout from "./components/Layout/Layout";
 
 const AppRoutes = () => {
     return (
@@ -22,22 +24,38 @@ const AppRoutes = () => {
 
             <Route path="/auth/callback" element={<OAuthCallback />} />
 
-            <Route
-                path="dashboard"
-                element={
-                    <ProtectedRoute>
-                        <Courses />
-                    </ProtectedRoute>
-                }
-            />
-             <Route
-                path="courses"
-                element={
-                    <ProtectedRoute>
-                        <Courses />
-                    </ProtectedRoute>
-                }
-            />
+            <Route element={<Layout />}>
+                <Route
+                    path="dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Courses />
+                        </ProtectedRoute>
+                    }
+                />
+            </Route>
+
+             <Route element={<Layout />}>
+                <Route
+                    path="courses"
+                    element={
+                        <ProtectedRoute>
+                            <Courses />
+                        </ProtectedRoute>
+                    }
+                />
+            </Route>
+
+             <Route element={<Layout />}>
+                <Route
+                    path="courses/:id"
+                    element={
+                        <ProtectedRoute>
+                            <Course />
+                        </ProtectedRoute>
+                    }
+                />
+            </Route>
         </Routes>
     );
 };

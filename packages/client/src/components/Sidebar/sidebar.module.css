@@ -11,6 +11,11 @@
     gap: 0.25rem;
     z-index: 100;
     transition: width 0.22s ease;
+    overflow: visible;
+}
+
+.header,
+.bottom {
     overflow: hidden;
 }
 
@@ -32,9 +37,8 @@
 }
 
 .sidebar.expanded .header {
-    padding:  0 11px;
+    padding: 0 11px;
 }
-
 
 .logo {
     font-size: 0.95rem;
@@ -55,13 +59,12 @@
 .toggleBtn {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     width: 32px;
     height: 32px;
     border-radius: 7px;
     background: none;
     border: none;
-    color: #6b6a85;
+    color: var(--text-sidebar);
     cursor: pointer;
     transition:
         background 0.15s,
@@ -105,7 +108,7 @@
 .navItem::after {
     content: attr(data-label);
     position: absolute;
-    left: calc(100% + 12px);
+    left: calc(100% + 10px);
     top: 50%;
     transform: translateY(-50%);
     background: #1f1d32;
@@ -134,6 +137,8 @@
     opacity: 0;
     transition: opacity 0.12s ease;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .sidebar.expanded .label {
