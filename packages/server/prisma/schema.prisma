@@ -36,7 +36,8 @@ model Enrollment {
 model Course {
   id          Int          @id @default(autoincrement())
   title       String
-  description String?
+  section     String?
+  code        String       @unique
   createdBy   User         @relation("CourseCreator", fields: [userId], references: [id])
   userId      Int
   assignments Assignment[]

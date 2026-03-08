@@ -60,11 +60,12 @@ async function getCourseById(id) {
     return course;
 }
 
-async function createCourse(title, description, userId) {
+async function createCourse(title, section, code, userId) {
     const newCourse = await prisma.course.create({
         data: {
             title,
-            description,
+            section,
+            code,
             userId,
         },
         include: {
