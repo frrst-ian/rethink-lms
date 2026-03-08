@@ -19,10 +19,6 @@ export default function Course() {
     if (errors.length > 0)
         return <div className="error">Failed to load course.</div>;
 
-    const sortedAssignments = [...(course.assignments ?? [])].sort(
-        (a, b) => new Date(b.dueDate) - new Date(a.dueDate),
-    );
-
     const students = course.enrollments.map((e) => e.user);
 
     return (
@@ -151,10 +147,10 @@ export default function Course() {
 
                 {tab === "assignments" && (
                     <div className={styles.assignmentList}>
-                        {sortedAssignments.length === 0 ? (
+                        {course.assignments.length === 0 ? (
                             <p className={styles.empty}>No assignments yet.</p>
                         ) : (
-                            sortedAssignments.map((a) => (
+                            course.assignments.map((a) => (
                                 <div
                                     key={a.id}
                                     className={styles.assignmentCard}

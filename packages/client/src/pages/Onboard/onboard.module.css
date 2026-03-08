@@ -1,0 +1,94 @@
+.wrapper {
+    min-height: 100vh;
+    background: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.card {
+    background: var(--s-background);
+    border: 1px solid #2a2840;
+    border-radius: 1rem;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    color: var(--c-color);
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text2);
+    text-align: center;
+    margin-top: -0.5rem;
+}
+
+.roles {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.roleBtn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.2rem 1rem;
+    background: var(--background);
+    border: 2px solid #2a2840;
+    border-radius: 0.7rem;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.roleBtn:hover {
+    border-color: var(--secondary);
+    color: var(--text);
+}
+
+.roleBtn.active {
+    border-color: var(--secondary);
+    color: var(--text);
+    background: #1e1535;
+}
+
+.roleLabel {
+    font-size: 1.8rem;
+}
+
+.continueBtn {
+    width: 100%;
+    background: var(--secondary);
+    color: var(--text);
+    border: none;
+    border-radius: 0.45rem;
+    padding: 0.6rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-top: 0.4rem;
+}
+
+.continueBtn:hover {
+    background: var(--primary);
+}
+
+.continueBtn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}

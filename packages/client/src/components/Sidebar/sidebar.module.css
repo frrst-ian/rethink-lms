@@ -127,6 +127,11 @@
     opacity: 1;
 }
 
+.sidebar:not(.expanded) .icon,
+.toggleBtn {
+    margin-left: 0.3rem;
+}
+
 .icon {
     flex-shrink: 0;
 }

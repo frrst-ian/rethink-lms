@@ -2,7 +2,8 @@ const db = require("../db/courseModel");
 const { validateId, ensureExists } = require("../helpers/validators");
 
 async function getAllCourses(req, res) {
-    const courses = await db.getAllCourses();
+    const { id, role } = req.user;
+    const courses = await db.getAllCourses(id, role);
     return res.json(courses);
 }
 

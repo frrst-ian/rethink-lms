@@ -81,14 +81,21 @@ async function getGoogleAuth(req, res) {
 async function postSetRole(req, res) {
     const { role } = req.body;
 
-    if (!["STUDENT", "TEACHER"].includes(role)) {
+    if (!["student", "teacher"].includes(role)) {
         return res.status(400).json({ error: "Invalid role" });
     }
 
     const user = await db.updateUserRole(req.user.id, role);
 
     const token = jwt.sign(
-        { userId: user.id, email: user.email, needsOnboarding: false },
+        {
+            userId: user.id,
+            email: user.email,
+            name: req.user.name,
+            role: req.user.role,
+            profilePicture: req.user.profilePicture,
+            needsOnboarding: false,
+        },
         process.env.JWT_SECRET,
         { expiresIn: "7d" },
     );

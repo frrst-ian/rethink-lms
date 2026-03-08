@@ -1,7 +1,11 @@
 const prisma = require("../lib/prisma");
 
-async function getAllCourses() {
+async function getAllCourses(userId, role) {
     const courses = await prisma.course.findMany({
+        where:
+            role === "teacher"
+                ? { userId }
+                : { enrollments: { some: { userId } } },
         include: {
             createdBy: {
                 select: {
@@ -36,6 +40,9 @@ async function getCourseById(id) {
                     id: true,
                     title: true,
                     dueDate: true,
+                },
+                orderBy: {
+                    dueDate: "asc",
                 },
             },
             enrollments: {
@@ -76,6 +83,7 @@ async function createCourse(title, section, code, userId) {
                     profilePicture: true,
                 },
             },
+            _count: { select: { enrollments: true } },
         },
     });
     return newCourse;

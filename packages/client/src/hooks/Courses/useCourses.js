@@ -25,5 +25,5 @@ export default function useCourses() {
         fetchCourses();
     }, []);
 
-    return { courses, errors, loading };
+    return { courses, setCourses, errors, loading };
 }
