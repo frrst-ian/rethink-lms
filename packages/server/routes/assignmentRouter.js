@@ -20,7 +20,7 @@ assignmentRouter.post(
     "/:id/submissions",
     authenticateJwt,
     requireRole( "student"),
-    assignmentController.getStudentSubmission,
+    assignmentController.submitAssignment,
 );
 
 module.exports = assignmentRouter;

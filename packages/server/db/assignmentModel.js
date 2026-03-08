@@ -18,7 +18,7 @@ async function getStudentSubmission(userId, assignmentId) {
 }
 
 async function submitAssignment(content, assignmentId, userId) {
-    return await prisma.assignment.create({
+    return await prisma.submission.create({
         data: {
             content,
             userId,

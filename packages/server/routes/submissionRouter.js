@@ -7,7 +7,7 @@ const requireRole = require("../middleware/requireRole");
 submissionRouter.get(
     "/:id/result",
     authenticateJwt,
-    requireRole( "teacher"),
+    requireRole("student", "teacher"),
     submissionController.getSubmissionResults,
 );
 
