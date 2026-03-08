@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useRegister from "../../hooks/register/useRegister";
 import styles from "./register.module.css";
-import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
+import Button from "../../components/Button/Button";
 import GoogleIcon from "@mui/icons-material/Google";
 import { CircleUserRound, AtSign, Lock, UserRound } from "lucide-react";
 
 const Register = () => {
-    const { registerUser, error, submitting } = useRegister();
+    const { registerUser, errors, submitting } = useRegister();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("student");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        registerUser(form);
+        await registerUser(name, email, password, confirmPassword, role);
     };
 
     const handleOAuthLogin = (provider) => {
@@ -37,11 +37,12 @@ const Register = () => {
                             <h2 className={styles.registerHeader}>
                                 Create an account
                             </h2>
-
-                            {error && (
-                                <div className={styles.error}>
-                                    {error.map((err, index) => (
-                                        <span key={index}>{err}</span>
+                            {errors.length > 0 && (
+                                <div className="error-container">
+                                    {errors.map((error, index) => (
+                                        <p key={index} className={styles.error}>
+                                            {error}
+                                        </p>
                                     ))}
                                 </div>
                             )}
@@ -70,7 +71,7 @@ const Register = () => {
                                 name="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                autoComplete="current-password"
+                                autoComplete="new-password"
                                 label="Password"
                                 icon={Lock}
                                 required
@@ -82,7 +83,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setConfirmPassword(e.target.value)
                                 }
-                                autoComplete="current-password"
+                                autoComplete="new-password"
                                 label="Confirm Password"
                                 icon={Lock}
                                 required
@@ -101,6 +102,15 @@ const Register = () => {
                                     </label>
                                 ))}
                             </div>
+                            <Button
+                                type="primary"
+                                label={
+                                    submitting
+                                        ? "Creating Account..."
+                                        : "Create Account"
+                                }
+                                status={submitting}
+                            ></Button>
                         </div>
                     </form>
                     <div className={styles.oauthLogin}>
@@ -108,6 +118,7 @@ const Register = () => {
                         <button
                             className={styles.btnOAuth}
                             onClick={() => handleOAuthLogin("google")}
+                            type="button"
                         >
                             <GoogleIcon /> Continue with Google
                         </button>

@@ -20,8 +20,9 @@ export default function useLogin() {
 
             const userData = await response.data;
             login(userData.token, userData.user);
-            navigate("/posts");
+            navigate("/dashboard");
         } catch (err) {
+            console.log("res:", err.response.data)
             setError(err.response.data.errors);
         } finally {
             setSubmitting(false);

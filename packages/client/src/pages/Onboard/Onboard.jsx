@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { client } from "../../helpers/axiosClient";
 
 export default function Onboard() {
-    const { token, login } = useAuth();
+    const { login } = useAuth();
     const navigate = useNavigate();
-    const [role, setRole] = useState("STUDENT");
+    const [role, setRole] = useState("student");
 
     const handleSubmit = async () => {
-        const { data } = await client.post("/auth/set-role", { role }, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const { data } = await client.post("/auth/set-role", { role });
         login(data.token, data.user);
         navigate("/dashboard");
     };
@@ -19,11 +17,15 @@ export default function Onboard() {
     return (
         <div>
             <h2>I am a...</h2>
-            {["STUDENT", "TEACHER"].map(r => (
+            {["student", "teacher"].map((r) => (
                 <label key={r}>
-                    <input type="radio" value={r} checked={role === r}
-                           onChange={() => setRole(r)} />
-                    {r.charAt(0) + r.slice(1).toLowerCase()}
+                    <input
+                        type="radio"
+                        value={r}
+                        checked={role === r}
+                        onChange={() => setRole(r)}
+                    />
+                    {r.charAt(0).toUpperCase() + r.slice(1).toLowerCase()}
                 </label>
             ))}
             <button onClick={handleSubmit}>Continue</button>

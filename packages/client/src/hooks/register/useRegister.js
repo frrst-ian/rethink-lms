@@ -5,26 +5,40 @@ import { client } from "../../helpers/axiosClient";
 
 export default function useRegister() {
     const { login } = useAuth();
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
-    const registerUser = async (form) => {
+    const registerUser = async (
+        name,
+        email,
+        password,
+        confirmPassword,
+        role,
+    ) => {
         try {
+            setErrors([]);
             setSubmitting(true);
-            const response = await client.post("/auth/register", form);
+            const response = await client.post("/auth/register", {
+                name,
+                email,
+                password,
+                confirmPassword,
+                role,
+            });
 
             const userData = response.data;
             login(userData.token, userData.user);
-            navigate("/posts");
+            navigate("/dashboard");
             return userData;
         } catch (err) {
-            const errors = err.response.data.errors;
-            setError(errors);
-            setSubmitting(false);
+            const errorMessages = err.response?.data?.errors || [
+                "An unexpected error occurred",
+            ];
+            setErrors(errorMessages);
         } finally {
             setSubmitting(false);
         }
     };
-    return { registerUser, error, submitting };
+    return { registerUser, errors, submitting };
 }
