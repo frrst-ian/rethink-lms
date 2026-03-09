@@ -5,7 +5,7 @@ import "./styles/app.css";
 import { useAuth } from "./context/AuthContext";
 import { setupInterceptors } from "./helpers/axiosClient";
 
-const App = () => {
+function InterceptorSetup() {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -13,10 +13,16 @@ const App = () => {
         setupInterceptors(logout, navigate);
     }, [logout, navigate]);
 
+    return null;
+}
+
+const App = () => {
     return (
         <BrowserRouter>
             <div className="app">
                 <div className="main">
+                    <InterceptorSetup />
+
                     <AppRoutes />
                 </div>
             </div>
