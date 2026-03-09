@@ -9,16 +9,14 @@ cloudinary.config({
 
 const uploadToCloudinary = (fileBuffer, mimetype) => {
   return new Promise((resolve, reject) => {
-    const extension = mimetype.split("/")[1];
     const publicId = `pfp-${Date.now()}`;
 
     cloudinary.uploader
       .upload_stream(
         {
-          folder: "odin-book/",
+          folder: "rethink/",
           public_id: publicId,
-          allowed_formats: ["jpg", "jpeg", "png"],
-          format: extension,
+          resource_type: "auto",
         },
         (error, result) => {
           if (error) reject(error);
@@ -33,10 +31,16 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png", 
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     allowedTypes.includes(file.mimetype)
       ? cb(null, true)
-      : cb(new Error("Only JPG, JPEG, and PNG files are allowed"), false);
+      : cb(new Error("Only JPG, JPEG, PNG, PDF & docx files are allowed"), false);
   },
 });
 
