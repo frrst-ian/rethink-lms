@@ -8,9 +8,11 @@ const {
     registerValidator,
     loginValidator,
 } = require("../validators/userValidator");
+const authLimiter = require("../middleware/rateLimiter");
 
 authRouter.post(
     "/register",
+    authLimiter,
     registerValidator,
     validate,
     authController.postRegister,
@@ -18,6 +20,7 @@ authRouter.post(
 
 authRouter.post(
     "/login",
+    authLimiter,
     passport.authenticate("local", { session: false, failWithError: true }),
     loginValidator,
     authController.postLogin,
