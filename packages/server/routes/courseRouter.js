@@ -40,5 +40,11 @@ courseRouter.post(
     requireRole("teacher"),
     courseController.createAssignment,
 );
+courseRouter.delete(
+    "/:id",
+    authenticateJwt,
+    requireRole("teacher"),
+    courseController.deleteCourse,
+);
 
 module.exports = courseRouter;

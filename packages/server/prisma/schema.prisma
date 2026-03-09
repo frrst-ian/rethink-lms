@@ -18,7 +18,8 @@ model User {
   assignments    Assignment[]
   enrollments    Enrollment[]
   submissions    Submission[]
-  course         Course[]     @relation("CourseCreator")
+  courses        Course[]     @relation("CourseCreator")
+  materials      Material[]
 
   @@map("user")
 }
@@ -26,7 +27,7 @@ model User {
 model Enrollment {
   user     User   @relation(fields: [userId], references: [id])
   userId   Int
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id] , onDelete: Cascade)
   courseId Int
 
   @@id([userId, courseId])
@@ -42,6 +43,7 @@ model Course {
   userId      Int
   assignments Assignment[]
   enrollments Enrollment[]
+  materials   Material[]
 
   @@map("course")
 }
@@ -51,6 +53,8 @@ model Assignment {
   title       String
   description String
   dueDate     DateTime
+  fileUrl     String?
+  fileType    String?
   createdBy   User         @relation(fields: [userId], references: [id])
   userId      Int
   course      Course       @relation(fields: [courseId], references: [id])
@@ -66,9 +70,11 @@ model Submission {
   assignmentId Int
   user         User       @relation(fields: [userId], references: [id])
   userId       Int
-  content      String
+  content      String?
   submittedAt  DateTime   @default(now())
   result       Result?
+  fileUrl      String?
+  fileType     String?
 
   @@map("submission")
 }
@@ -77,7 +83,7 @@ model Result {
   id            Int         @id @default(autoincrement())
   submission    Submission  @relation(fields: [submissionId], references: [id])
   submissionId  Int         @unique
-  ai_percentage Float
+  ai_percentage Float?
   isFlagged     Boolean     @default(false)
   detectedAt    DateTime    @default(now())
   suggestion    Suggestion?
@@ -93,4 +99,17 @@ model Suggestion {
   createdAt DateTime @default(now())
 
   @@map("suggestion")
+}
+
+model Material {
+  id        Int      @id @default(autoincrement())
+  title     String
+  fileUrl   String?
+  fileType  String?
+  category  String?
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+  userId    Int
+  author    User     @relation(fields: [userId], references: [id])
 }

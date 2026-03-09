@@ -14,6 +14,13 @@ async function getStudentSubmission(userId, assignmentId) {
             userId: userId,
             assignmentId: assignmentId,
         },
+        include: {
+            result: {
+                include: {
+                    suggestion: true,
+                },
+            },
+        },
     });
 }
 
@@ -31,7 +38,7 @@ async function createResult(submissionId, ai_percentage, isFlagged) {
     return await prisma.result.create({
         data: {
             submissionId,
-            ai_percentage: parseFloat((ai_percentage * 100).toFixed(2)),
+            ai_percentage,
             isFlagged,
         },
     });

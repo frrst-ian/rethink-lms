@@ -1,6 +1,7 @@
 const db = require("../db/assignmentModel");
 const { validateId, ensureExists } = require("../helpers/validators");
 const detectAI = require("../helpers/detectAI");
+const { assignment } = require("../lib/prisma");
 
 async function getAllSubmissions(req, res) {
     const assignmentId = validateId(req.params.id, "Assign ID");
@@ -29,20 +30,36 @@ async function submitAssignment(req, res) {
         return res.status(400).json({ errors: ["Content is required"] });
     }
 
+    const existingAssignmentSubmission = await db.getStudentSubmission(
+        userId,
+        assignmentId,
+    );
+
+    console.log("existing assignment:" , existingAssignmentSubmission)
+
+    if (existingAssignmentSubmission) {
+        return res
+            .status(409)
+            .json({ errors: ["Assignment submission already exist"] });
+    }
+
     const submission = await db.submitAssignment(content, assignmentId, userId);
 
     ensureExists(submission, "Submitted Assignment");
 
     const { ai_percentage, isFlagged } = await detectAI(content);
 
-    const formatted = parseFloat((ai_percentage * 100).toFixed(2));
+    const aiPercentageFormatted = parseFloat((ai_percentage * 100).toFixed(2));
+    const humanPercentageFormatted = parseFloat(
+        ((1 - ai_percentage) * 100).toFixed(2),
+    );
 
-    await db.createResult(submission.id, formatted, isFlagged);
+    await db.createResult(submission.id, aiPercentageFormatted, isFlagged);
 
     return res.status(201).json({
         submission,
-        ai_percentage: formatted,
-        human_percentage: parseFloat(((1 - ai_percentage) * 100).toFixed(2)),
+        ai_percentage: aiPercentageFormatted,
+        human_percentage: humanPercentageFormatted,
         isFlagged,
     });
 }

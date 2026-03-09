@@ -95,6 +95,20 @@ async function createAssignment(req, res) {
     return res.status(201).json(newAssignment);
 }
 
+async function deleteCourse(req, res) {
+    const id = validateId(req.params.id, "Course Id");
+
+    const course = await db.getCourseById(id);
+
+    if (!course) {
+        return res.status(404).json({ errors: ["Course doesn't exist"] });
+    }
+
+    await db.deleteCourse(id);
+
+    return res.json({ message: "Course deleted successfully" });
+}
+
 module.exports = {
     getAllCourses,
     getCourseById,
@@ -102,4 +116,5 @@ module.exports = {
     enrollStudent,
     getAssignmentById,
     createAssignment,
+    deleteCourse,
 };

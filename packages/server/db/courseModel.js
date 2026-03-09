@@ -131,6 +131,12 @@ async function createAssignment(title, description, dueDate, courseId, userId) {
     return newCourse;
 }
 
+async function deleteCourse(id) {
+    return await prisma.course.delete({
+        where: { id },
+    });
+}
+
 module.exports = {
     getAllCourses,
     getCourseById,
@@ -139,4 +145,5 @@ module.exports = {
     checkEnrollment,
     getAssignmentById,
     createAssignment,
+    deleteCourse
 };
