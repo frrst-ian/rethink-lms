@@ -21,13 +21,9 @@ async function createCourse(req, res) {
 
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    if (!title?.trim()) {
-        return res.status(400).json({ errors: ["Title is required"] });
-    }
-
     const userId = req.user.id;
     const newCourse = await db.createCourse(
-        title.trim(),
+        title,
         section,
         code,
         userId,
@@ -77,17 +73,9 @@ async function createAssignment(req, res) {
 
     const userId = req.user.id;
 
-    if (!title?.trim()) {
-        return res.status(400).json({ errors: ["Title is required"] });
-    }
-
-    if (!description?.trim()) {
-        return res.status(400).json({ errors: ["Description is required"] });
-    }
-
     const newAssignment = await db.createAssignment(
-        title.trim(),
-        description.trim(),
+        title,
+        description,
         dueDate,
         courseId,
         userId,
@@ -100,9 +88,7 @@ async function deleteCourse(req, res) {
 
     const course = await db.getCourseById(id);
 
-    if (!course) {
-        return res.status(404).json({ errors: ["Course doesn't exist"] });
-    }
+    ensureExists(course, "Course")
 
     await db.deleteCourse(id);
 

@@ -34,19 +34,8 @@ async function submitAssignment(content, assignmentId, userId) {
     });
 }
 
-async function createResult(submissionId, ai_percentage, isFlagged) {
-    return await prisma.result.create({
-        data: {
-            submissionId,
-            ai_percentage,
-            isFlagged,
-        },
-    });
-}
-
 module.exports = {
     getAllSubmissions,
     getStudentSubmission,
     submitAssignment,
-    createResult,
 };

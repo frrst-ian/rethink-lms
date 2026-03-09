@@ -3,6 +3,9 @@ const courseRouter = Router();
 const courseController = require("../controllers/courseController");
 const authenticateJwt = require("../middleware/auth");
 const requireRole = require("../middleware/requireRole");
+const { createCourseValidator } = require("../validators/courseValidator");
+const { createAssignmentValidator } = require("../validators/courseValidator");
+const validate = require("../middleware/validate");
 
 courseRouter.get(
     "/",
@@ -20,6 +23,8 @@ courseRouter.post(
     "/",
     authenticateJwt,
     requireRole("teacher"),
+    createCourseValidator,
+    validate,
     courseController.createCourse,
 );
 courseRouter.post(
@@ -38,6 +43,8 @@ courseRouter.post(
     "/:courseId/assignments",
     authenticateJwt,
     requireRole("teacher"),
+    createAssignmentValidator,
+    validate,
     courseController.createAssignment,
 );
 courseRouter.delete(

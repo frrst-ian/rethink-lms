@@ -1,7 +1,8 @@
 const db = require("../db/assignmentModel");
+const resultModel = require("../db/resultModel");
+
 const { validateId, ensureExists } = require("../helpers/validators");
 const detectAI = require("../helpers/detectAI");
-const { assignment } = require("../lib/prisma");
 
 async function getAllSubmissions(req, res) {
     const assignmentId = validateId(req.params.id, "Assign ID");
@@ -35,7 +36,7 @@ async function submitAssignment(req, res) {
         assignmentId,
     );
 
-    console.log("existing assignment:" , existingAssignmentSubmission)
+    console.log("existing assignment:", existingAssignmentSubmission);
 
     if (existingAssignmentSubmission) {
         return res
@@ -54,7 +55,11 @@ async function submitAssignment(req, res) {
         ((1 - ai_percentage) * 100).toFixed(2),
     );
 
-    await db.createResult(submission.id, aiPercentageFormatted, isFlagged);
+    await resultModel.createResult(
+        submission.id,
+        aiPercentageFormatted,
+        isFlagged,
+    );
 
     return res.status(201).json({
         submission,
