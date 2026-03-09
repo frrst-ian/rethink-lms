@@ -6,6 +6,7 @@ import NotFound from "./components/NotFound/NotFound";
 import Onboard from "./pages/Onboard/Onboard";
 import Courses from "./pages/Courses/Courses";
 import Course from "./pages/Course/Course";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./components/Utils/ProtectedRoutes";
 import Layout from "./components/Layout/Layout";
 
@@ -29,13 +30,13 @@ const AppRoutes = () => {
                     path="dashboard"
                     element={
                         <ProtectedRoute>
-                            <Courses />
+                            <Dashboard />
                         </ProtectedRoute>
                     }
                 />
             </Route>
 
-             <Route element={<Layout />}>
+            <Route element={<Layout />}>
                 <Route
                     path="courses"
                     element={
@@ -46,7 +47,7 @@ const AppRoutes = () => {
                 />
             </Route>
 
-             <Route element={<Layout />}>
+            <Route element={<Layout />}>
                 <Route
                     path="courses/:id"
                     element={

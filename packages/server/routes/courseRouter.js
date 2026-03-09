@@ -3,8 +3,10 @@ const courseRouter = Router();
 const courseController = require("../controllers/courseController");
 const authenticateJwt = require("../middleware/auth");
 const requireRole = require("../middleware/requireRole");
-const { createCourseValidator } = require("../validators/courseValidator");
-const { createAssignmentValidator } = require("../validators/courseValidator");
+const {
+    createCourseValidator,
+    createAssignmentValidator,
+} = require("../validators/courseValidator");
 const validate = require("../middleware/validate");
 
 courseRouter.get(

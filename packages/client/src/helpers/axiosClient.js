@@ -11,3 +11,16 @@ client.interceptors.request.use((config) => {
     }
     return config;
 });
+
+export function setupInterceptors(logout, navigate) {
+    client.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response?.status === 401) {
+                logout();
+                navigate("/login");
+            }
+            return Promise.reject(error);
+        }
+    );
+}
