@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const courseRouter = Router();
 const courseController = require("../controllers/courseController");
+const materialController = require("../controllers/materialController");
+
 const authenticateJwt = require("../middleware/auth");
 const requireRole = require("../middleware/requireRole");
 const {
@@ -56,6 +58,25 @@ courseRouter.delete(
     authenticateJwt,
     requireRole("teacher"),
     courseController.deleteCourse,
+);
+courseRouter.get(
+    "/:courseId/materials",
+    authenticateJwt,
+    requireRole("student", "teacher"),
+    materialController.getMaterials,
+);
+courseRouter.post(
+    "/:courseId/materials",
+    authenticateJwt,
+    requireRole("teacher"),
+    upload.single("file"),
+    materialController.createMaterial,
+);
+courseRouter.delete(
+    "/:courseId/materials/:id",
+    authenticateJwt,
+    requireRole("teacher"),
+    materialController.deleteMaterial,
 );
 
 module.exports = courseRouter;

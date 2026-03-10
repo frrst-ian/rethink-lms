@@ -27,7 +27,7 @@ model User {
 model Enrollment {
   user     User   @relation(fields: [userId], references: [id])
   userId   Int
-  course   Course @relation(fields: [courseId], references: [id] , onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId Int
 
   @@id([userId, courseId])
@@ -106,10 +106,13 @@ model Material {
   title     String
   fileUrl   String?
   fileType  String?
+  publicId  String?
   category  String?
   createdAt DateTime @default(now())
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId  Int
   userId    Int
   author    User     @relation(fields: [userId], references: [id])
+
+  @@map("material")
 }
