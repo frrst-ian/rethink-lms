@@ -24,12 +24,20 @@ async function getStudentSubmission(userId, assignmentId) {
     });
 }
 
-async function submitAssignment(content, assignmentId, userId) {
+async function submitAssignment(
+    content,
+    assignmentId,
+    userId,
+    fileUrl,
+    fileType,
+) {
     return await prisma.submission.create({
         data: {
             content,
             userId,
             assignmentId,
+            fileUrl,
+            fileType,
         },
     });
 }

@@ -7,20 +7,38 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const getFileType = (mimetype) => {
+  const map = {
+    "application/pdf": "pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      "docx",
+    "image/jpeg": "jpg",
+    "image/png": "png",
+  };
+  return map[mimetype] || null;
+};
+
 const uploadToCloudinary = (fileBuffer, mimetype) => {
   return new Promise((resolve, reject) => {
-    const publicId = `pfp-${Date.now()}`;
+    const fileType = getFileType(mimetype);
+    const publicId = `file-${Date.now()}`;
+    const resourceType = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ].includes(mimetype)
+      ? "raw"
+      : "image";
 
     cloudinary.uploader
       .upload_stream(
         {
           folder: "rethink/",
           public_id: publicId,
-          resource_type: "auto",
+          resource_type: resourceType,
         },
         (error, result) => {
           if (error) reject(error);
-          else resolve(result);
+          else resolve({ ...result, fileType }); 
         },
       )
       .end(fileBuffer);
@@ -34,13 +52,16 @@ const upload = multer({
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
-      "image/png", 
+      "image/png",
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     allowedTypes.includes(file.mimetype)
       ? cb(null, true)
-      : cb(new Error("Only JPG, JPEG, PNG, PDF & docx files are allowed"), false);
+      : cb(
+          new Error("Only JPG, JPEG, PNG, PDF & docx files are allowed"),
+          false,
+        );
   },
 });
 

@@ -1,5 +1,6 @@
 const db = require("../db/assignmentModel");
 const resultModel = require("../db/resultModel");
+const { uploadToCloudinary } = require("../config/cloudinary");
 
 const { validateId, ensureExists } = require("../helpers/validators");
 const detectAI = require("../helpers/detectAI");
@@ -22,21 +23,27 @@ async function getStudentSubmission(req, res) {
 }
 
 async function submitAssignment(req, res) {
+    let fileUrl = null;
+    let fileType = null;
+
+    if (req.file) {
+        const result = await uploadToCloudinary(
+            req.file.buffer,
+            req.file.mimetype,
+        );
+        fileUrl = result.secure_url;
+        fileType = result.fileType;
+    }
+
     const { content } = req.body;
     const userId = req.user.id;
 
-    const assignmentId = validateId(req.params.id, "Assign ID");
-
-    if (!content?.trim()) {
-        return res.status(400).json({ errors: ["Content is required"] });
-    }
+    const assignmentId = validateId(req.params.id, "Assignment ID");
 
     const existingAssignmentSubmission = await db.getStudentSubmission(
         userId,
         assignmentId,
     );
-
-    console.log("existing assignment:", existingAssignmentSubmission);
 
     if (existingAssignmentSubmission) {
         return res
@@ -44,7 +51,13 @@ async function submitAssignment(req, res) {
             .json({ errors: ["Assignment submission already exist"] });
     }
 
-    const submission = await db.submitAssignment(content, assignmentId, userId);
+    const submission = await db.submitAssignment(
+        content,
+        assignmentId,
+        userId,
+        fileUrl,
+        fileType,
+    );
 
     ensureExists(submission, "Submitted Assignment");
 

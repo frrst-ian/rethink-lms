@@ -118,7 +118,15 @@ async function getAssignmentById(courseId, id) {
     });
 }
 
-async function createAssignment(title, description, dueDate, courseId, userId) {
+async function createAssignment(
+    title,
+    description,
+    dueDate,
+    courseId,
+    userId,
+    fileUrl,
+    fileType,
+) {
     const newCourse = await prisma.assignment.create({
         data: {
             title,
@@ -126,6 +134,8 @@ async function createAssignment(title, description, dueDate, courseId, userId) {
             dueDate,
             courseId,
             userId,
+            fileUrl,
+            fileType,
         },
     });
     return newCourse;
@@ -145,5 +155,5 @@ module.exports = {
     checkEnrollment,
     getAssignmentById,
     createAssignment,
-    deleteCourse
+    deleteCourse,
 };

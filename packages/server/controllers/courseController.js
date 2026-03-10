@@ -1,3 +1,4 @@
+const { uploadToCloudinary } = require("../config/cloudinary");
 const db = require("../db/courseModel");
 const { validateId, ensureExists } = require("../helpers/validators");
 
@@ -22,12 +23,7 @@ async function createCourse(req, res) {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     const userId = req.user.id;
-    const newCourse = await db.createCourse(
-        title,
-        section,
-        code,
-        userId,
-    );
+    const newCourse = await db.createCourse(title, section, code, userId);
 
     return res.status(201).json(newCourse);
 }
@@ -68,7 +64,20 @@ async function getAssignmentById(req, res) {
 }
 
 async function createAssignment(req, res) {
+    let fileUrl = null;
+    let fileType = null;
+
+    if (req.file) {
+        const result = await uploadToCloudinary(
+            req.file.buffer,
+            req.file.mimetype,
+        );
+        fileUrl = result.secure_url;
+        fileType = result.fileType;
+    }
+
     const { title, description, dueDate } = req.body;
+
     const courseId = validateId(req.params.courseId, "Course ID");
 
     const userId = req.user.id;
@@ -79,6 +88,8 @@ async function createAssignment(req, res) {
         dueDate,
         courseId,
         userId,
+        fileUrl,
+        fileType,
     );
     return res.status(201).json(newAssignment);
 }
@@ -88,7 +99,7 @@ async function deleteCourse(req, res) {
 
     const course = await db.getCourseById(id);
 
-    ensureExists(course, "Course")
+    ensureExists(course, "Course");
 
     await db.deleteCourse(id);
 

@@ -35,4 +35,7 @@ const createAssignmentValidator = [
         .withMessage("Due date must be a valid date"),
 ];
 
-module.exports = { createCourseValidator, createAssignmentValidator };
+module.exports = {
+    createCourseValidator,
+    createAssignmentValidator
+};

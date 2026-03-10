@@ -8,6 +8,7 @@ const {
     createAssignmentValidator,
 } = require("../validators/courseValidator");
 const validate = require("../middleware/validate");
+const { upload } = require("../config/cloudinary");
 
 courseRouter.get(
     "/",
@@ -45,6 +46,7 @@ courseRouter.post(
     "/:courseId/assignments",
     authenticateJwt,
     requireRole("teacher"),
+    upload.single("file"),
     createAssignmentValidator,
     validate,
     courseController.createAssignment,
