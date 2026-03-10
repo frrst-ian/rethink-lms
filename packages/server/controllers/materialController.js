@@ -52,7 +52,7 @@ async function deleteMaterial(req, res) {
         return res.status(409).json({ errors: ["Material does not exist"] });
     }
 
-    await cloudinary.uploader.destroy(material.publicId, {
+    await cloudinary.uploader.destroy(existingMaterial.publicId, {
         resource_type:
             existingMaterial.fileType === "pdf" ||
             existingMaterial.fileType === "docx"
