@@ -49,16 +49,16 @@ async function submitAssignment(req, res) {
 
     const assignmentId = validateId(req.params.id, "Assignment ID");
 
-    const existingAssignmentSubmission = await db.getStudentSubmission(
-        userId,
-        assignmentId,
-    );
+const existingAssignmentSubmission = await db.getStudentSubmission(
+    userId,
+    assignmentId,
+);
 
-    if (existingAssignmentSubmission) {
-        return res
-            .status(409)
-            .json({ errors: ["Assignment submission already exist"] });
-    }
+if (existingAssignmentSubmission) {
+    return res
+        .status(409)
+        .json({ errors: ["Assignment submission already exist"] });
+}
 
     const submission = await db.submitAssignment(
         content,
@@ -129,5 +129,5 @@ module.exports = {
     getStudentSubmission,
     submitAssignment,
     resetSubmission,
-    getAssignment
+    getAssignment,
 };
