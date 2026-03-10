@@ -28,6 +28,13 @@ async function createCourse(req, res) {
     return res.status(201).json(newCourse);
 }
 
+async function getCourseByCode(req, res) {
+    const { code } = req.params;
+    const course = await db.getCourseByCode(code);
+    ensureExists(course, "Course");
+    return res.json(course);
+}
+
 async function enrollStudent(req, res) {
     const userId = req.user.id;
     const courseId = validateId(req.params.id, "Course ID");
@@ -114,4 +121,5 @@ module.exports = {
     getAssignmentById,
     createAssignment,
     deleteCourse,
+    getCourseByCode,
 };
