@@ -19,6 +19,12 @@ courseRouter.get(
     courseController.getAllCourses,
 );
 courseRouter.get(
+    "/by-code/:code",
+    authenticateJwt,
+    requireRole("student", "teacher"),
+    courseController.getCourseByCode,
+);
+courseRouter.get(
     "/:id",
     authenticateJwt,
     requireRole("student", "teacher"),

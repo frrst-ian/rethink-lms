@@ -3,8 +3,15 @@ const { InferenceClient } = require("@huggingface/inference");
 const client = new InferenceClient(process.env.HF_TOKEN);
 
 async function detectAI(content) {
-    if (!content?.trim()) {
-        throw new Error("Content is required for AI detection");
+
+    const words = content.trim().split(/\s+/).filter(Boolean);
+    if (words.length < 100) {
+        return {
+            ai_percentage: null,
+            isFlagged: false,
+            skipped: true,
+            reason: "Too short for analysis",
+        };
     }
 
     const output = await client.textClassification({

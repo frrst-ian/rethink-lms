@@ -10,4 +10,13 @@ async function createResult(submissionId, ai_percentage, isFlagged) {
     });
 }
 
-module.exports = { createResult };
+async function createSuggestion(resultId, content) {
+    return await prisma.suggestion.create({
+        data: {
+            resultId,
+            content,
+        },
+    });
+}
+
+module.exports = { createResult, createSuggestion };

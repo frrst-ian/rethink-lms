@@ -147,6 +147,11 @@ async function deleteCourse(id) {
     });
 }
 
+async function getCourseByCode(code) {
+    return await prisma.course.findUnique({
+        where: { code }
+    });
+}
 module.exports = {
     getAllCourses,
     getCourseById,
@@ -156,4 +161,5 @@ module.exports = {
     getAssignmentById,
     createAssignment,
     deleteCourse,
+    getCourseByCode
 };

@@ -1,6 +1,8 @@
 const db = require("../db/assignmentModel");
 const resultModel = require("../db/resultModel");
 const { uploadToCloudinary } = require("../config/cloudinary");
+const extractText = require("../helpers/extractText");
+const generateSuggestion = require("../helpers/generateSuggestion");
 
 const { validateId, ensureExists } = require("../helpers/validators");
 const detectAI = require("../helpers/detectAI");
@@ -19,6 +21,13 @@ async function getStudentSubmission(req, res) {
     const assignment = await db.getStudentSubmission(userId, assignmentId);
     ensureExists(assignment, "Student Submission");
 
+    return res.json(assignment);
+}
+
+async function getAssignment(req, res) {
+    const id = validateId(req.params.id, "Assignment ID");
+    const assignment = await db.getAssignmentById(id);
+    ensureExists(assignment, "Assignment");
     return res.json(assignment);
 }
 
@@ -61,29 +70,64 @@ async function submitAssignment(req, res) {
 
     ensureExists(submission, "Submitted Assignment");
 
-    const { ai_percentage, isFlagged } = await detectAI(content);
+    let textContent = content;
 
-    const aiPercentageFormatted = parseFloat((ai_percentage * 100).toFixed(2));
-    const humanPercentageFormatted = parseFloat(
-        ((1 - ai_percentage) * 100).toFixed(2),
-    );
+    if (!textContent && fileUrl && fileType) {
+        textContent = await extractText(fileUrl, fileType);
+    }
 
-    await resultModel.createResult(
-        submission.id,
-        aiPercentageFormatted,
-        isFlagged,
-    );
+    const detection = await detectAI(textContent);
+
+    if (!detection.skipped) {
+        const aiPercentageFormatted = parseFloat(
+            (detection.ai_percentage * 100).toFixed(2),
+        );
+        const humanPercentageFormatted = parseFloat(
+            ((1 - detection.ai_percentage) * 100).toFixed(2),
+        );
+
+        const result = await resultModel.createResult(
+            submission.id,
+            aiPercentageFormatted,
+            detection.isFlagged,
+        );
+
+        if (detection.isFlagged) {
+            const suggestionText = await generateSuggestion(textContent);
+            await resultModel.createSuggestion(result.id, suggestionText);
+        }
+
+        return res.status(201).json({
+            submission,
+            ai_percentage: aiPercentageFormatted,
+            human_percentage: humanPercentageFormatted,
+            isFlagged: detection.isFlagged,
+        });
+    }
 
     return res.status(201).json({
         submission,
-        ai_percentage: aiPercentageFormatted,
-        human_percentage: humanPercentageFormatted,
-        isFlagged,
+        skipped: true,
+        reason: detection.reason,
     });
+}
+
+async function resetSubmission(req, res) {
+    const assignmentId = validateId(req.params.id, "Assignment ID");
+    const { studentId } = req.body;
+
+    const submission = await db.getStudentSubmission(studentId, assignmentId);
+    ensureExists(submission, "Submission");
+
+    await db.deleteSubmission(submission.id);
+
+    return res.json({ message: "Submission reset. Student can resubmit." });
 }
 
 module.exports = {
     getAllSubmissions,
     getStudentSubmission,
     submitAssignment,
+    resetSubmission,
+    getAssignment
 };
