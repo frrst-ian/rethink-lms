@@ -18,16 +18,25 @@ const getFileType = (mimetype) => {
   return map[mimetype] || null;
 };
 
-const uploadToCloudinary = (fileBuffer, mimetype) => {
+const buildPublicId = (originalname) => {
+  const nameWithoutExt = originalname.replace(/\.[^.]+$/, "");
+  return nameWithoutExt
+    .replace(/[^a-zA-Z0-9._-]/g, "-")
+    .replace(/-+/g, "-")
+    .toLowerCase();
+};
+
+const uploadToCloudinary = (fileBuffer, mimetype, originalname = "") => {
   return new Promise((resolve, reject) => {
     const fileType = getFileType(mimetype);
-    const publicId = `file-${Date.now()}`;
-    const resourceType = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ].includes(mimetype)
-      ? "raw"
-      : "image";
+    const publicId = buildPublicId(originalname);
+
+    const resourceType =
+      mimetype === "image/jpeg" ||
+      mimetype === "image/png" ||
+      mimetype === "image/jpg"
+        ? "image"
+        : "raw";
 
     cloudinary.uploader
       .upload_stream(
@@ -38,7 +47,7 @@ const uploadToCloudinary = (fileBuffer, mimetype) => {
         },
         (error, result) => {
           if (error) reject(error);
-          else resolve({ ...result, fileType }); 
+          else resolve({ ...result, fileType });
         },
       )
       .end(fileBuffer);

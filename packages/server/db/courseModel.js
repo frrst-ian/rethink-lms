@@ -126,8 +126,9 @@ async function createAssignment(
     userId,
     fileUrl,
     fileType,
+    originalName,
 ) {
-    const newCourse = await prisma.assignment.create({
+    return await prisma.assignment.create({
         data: {
             title,
             description,
@@ -136,9 +137,9 @@ async function createAssignment(
             userId,
             fileUrl,
             fileType,
+            originalName,
         },
     });
-    return newCourse;
 }
 
 async function deleteCourse(id) {
@@ -149,9 +150,10 @@ async function deleteCourse(id) {
 
 async function getCourseByCode(code) {
     return await prisma.course.findUnique({
-        where: { code }
+        where: { code },
     });
 }
+
 module.exports = {
     getAllCourses,
     getCourseById,
@@ -161,5 +163,5 @@ module.exports = {
     getAssignmentById,
     createAssignment,
     deleteCourse,
-    getCourseByCode
+    getCourseByCode,
 };

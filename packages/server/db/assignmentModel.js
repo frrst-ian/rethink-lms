@@ -45,6 +45,7 @@ async function submitAssignment(
     userId,
     fileUrl,
     fileType,
+    originalName,
 ) {
     return await prisma.submission.create({
         data: {
@@ -53,6 +54,7 @@ async function submitAssignment(
             assignmentId,
             fileUrl,
             fileType,
+            originalName,
         },
     });
 }
@@ -73,7 +75,8 @@ async function getAssignmentById(id) {
             dueDate: true,
             fileUrl: true,
             fileType: true,
-        }
+            originalName: true,
+        },
     });
 }
 
@@ -82,5 +85,5 @@ module.exports = {
     getStudentSubmission,
     submitAssignment,
     deleteSubmission,
-    getAssignmentById
+    getAssignmentById,
 };

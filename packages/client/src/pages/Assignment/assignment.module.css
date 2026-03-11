@@ -1,0 +1,262 @@
+.wrapper {
+    padding: 2rem 2rem 2rem 6rem;
+    min-height: 100vh;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s;
+    width: fit-content;
+}
+
+.back:hover {
+    color: var(--text);
+}
+
+/* Header */
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.title {
+    font-size: 1.6rem;
+    color: var(--c-color);
+}
+
+.due {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--text2);
+}
+
+.overdue {
+    color: #ff5959;
+}
+
+/* Card */
+.card {
+    background: var(--s-background);
+    border-radius: 0.6rem;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cardLabel {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+}
+
+.description {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+/* Already submitted */
+.alreadySubmitted {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #1a3d2b;
+    color: #4caf82;
+    font-size: 0.78rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    width: fit-content;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.submittedHint {
+    font-size: 0.85rem;
+    color: var(--text2);
+}
+
+.viewResultBtn {
+    background: none;
+    border: none;
+    color: var(--sidebar-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+    transition: opacity 0.15s;
+}
+
+.viewResultBtn:hover {
+    opacity: 0.75;
+}
+
+/* Mode toggle */
+.modeToggle {
+    display: flex;
+    background: var(--background);
+    border-radius: 0.45rem;
+    padding: 0.2rem;
+    gap: 0.2rem;
+    width: fit-content;
+}
+
+.modeBtn {
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    font-size: 0.82rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        color 0.15s;
+}
+
+.modeBtn:hover {
+    color: var(--text);
+}
+
+.activeModeBtn {
+    background: var(--s-background);
+    color: var(--text);
+}
+
+/* Textarea */
+.textarea {
+    width: 100%;
+    background: var(--background);
+    color: var(--text);
+    border: 1px solid #2a2840;
+    border-radius: 0.45rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+}
+
+.textarea:focus {
+    border-color: var(--secondary);
+}
+
+.textarea::placeholder {
+    color: var(--text-sidebar);
+}
+
+/* File upload zone */
+.fileZone {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fileLabel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px dashed #2a2840;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    color: var(--text-sidebar);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition:
+        border-color 0.15s,
+        color 0.15s;
+}
+
+.fileLabel:hover {
+    border-color: var(--secondary);
+    color: var(--text2);
+}
+
+.hiddenInput {
+    display: none;
+}
+
+.filePill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--background);
+    border: 1px solid #2a2840;
+    border-radius: 0.45rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text2);
+    width: fit-content;
+}
+
+.removeFile {
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.removeFile:hover {
+    color: #ff5959;
+}
+
+/* Error */
+.error {
+    font-size: 0.82rem;
+    color: #ff5959;
+}
+
+/* Submit button */
+.submitBtn {
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 0.45rem;
+    padding: 0.55rem 1.4rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: fit-content;
+    margin-top: 0.25rem;
+}
+
+.submitBtn:hover {
+    background: var(--secondary);
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import useCourse from "../../hooks/Course/useCourse";
 import styles from "./course.module.css";
 import { LayoutGrid, Users, ClipboardList, CalendarClock } from "lucide-react";
@@ -28,7 +29,7 @@ export default function Course() {
                 <div>
                     <h2 className={styles.title}>{course.title}</h2>
                     <p className={styles.meta}>
-                        {course.section} · 
+                        {course.section} ·
                         {user.role === "teacher" && (
                             <span className={styles.code}>{course.code}</span>
                         )}
@@ -151,8 +152,9 @@ export default function Course() {
                             <p className={styles.empty}>No assignments yet.</p>
                         ) : (
                             course.assignments.map((a) => (
-                                <div
+                                <NavLink
                                     key={a.id}
+                                    to={`/courses/${course.id}/assignments/${a.id}`}
                                     className={styles.assignmentCard}
                                 >
                                     <p className={styles.assignmentTitle}>
@@ -173,7 +175,7 @@ export default function Course() {
                                             },
                                         )}
                                     </p>
-                                </div>
+                                </NavLink>
                             ))
                         )}
                     </div>

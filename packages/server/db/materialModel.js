@@ -11,6 +11,7 @@ async function getMaterials(courseId) {
         orderBy: { createdAt: "asc" },
     });
 }
+
 async function createMaterial(
     title,
     category,
@@ -19,6 +20,7 @@ async function createMaterial(
     courseId,
     userId,
     publicId,
+    originalName,
 ) {
     return await prisma.material.create({
         data: {
@@ -29,14 +31,17 @@ async function createMaterial(
             courseId,
             userId,
             publicId,
+            originalName,
         },
     });
 }
+
 async function getMaterialById(id) {
     return await prisma.material.findUnique({
         where: { id: id },
     });
 }
+
 async function deleteMaterial(id) {
     return await prisma.material.delete({
         where: { id: id },

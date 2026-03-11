@@ -1,0 +1,234 @@
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { CalendarClock, ChevronLeft, Upload, FileText, X } from "lucide-react";
+import useAssignment from "../../hooks/Assignment/useAssignment";
+import useStudentSubmission from "../../hooks/Submission/useStudentSubmission";
+import useSubmitAssignment from "../../hooks/Assignment/useSubmitAssignment";
+import FileViewer from "../../components/FileViewer/FileViewer";
+import { useAuth } from "../../context/AuthContext";
+import styles from "./assignment.module.css";
+
+const ALLOWED_TYPES = [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
+export default function Assignment() {
+    const { courseId } = useParams();
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
+    const { assignment, errors, loading } = useAssignment();
+    const {
+        submission,
+        setSubmission,
+        loading: subLoading,
+    } = useStudentSubmission();
+    const { submit, error: submitError, submitting } = useSubmitAssignment();
+
+    const [mode, setMode] = useState("text");
+    const [content, setContent] = useState("");
+    const [file, setFile] = useState(null);
+    const [fileError, setFileError] = useState(null);
+
+    const handleFileChange = (e) => {
+        const picked = e.target.files[0];
+        if (!picked) return;
+        if (!ALLOWED_TYPES.includes(picked.type)) {
+            setFileError("Only PDF or DOCX files are allowed.");
+            return;
+        }
+        setFileError(null);
+        setFile(picked);
+    };
+
+    const handleSubmit = async () => {
+        if (mode === "text" && !content.trim()) return;
+        if (mode === "file" && !file) return;
+
+        const data = await submit({
+            content: mode === "text" ? content : null,
+            file: mode === "file" ? file : null,
+        });
+
+        if (data) {
+            setSubmission(data.submission);
+            navigate(`/assignments/${assignment.id}/result`, {
+                state: { result: data },
+            });
+        }
+    };
+
+    if (loading || subLoading) return <div className="loading">Loading...</div>;
+    if (errors.length > 0)
+        return <div className="loading">Failed to load assignment.</div>;
+
+    const isOverdue = new Date(assignment.dueDate) < new Date();
+
+    return (
+        <div className={styles.wrapper}>
+            <button
+                className={styles.back}
+                onClick={() => navigate(`/courses/${courseId}`)}
+            >
+                <ChevronLeft size={16} strokeWidth={1.75} />
+                Back to Course
+            </button>
+
+            {/* Header */}
+            <div className={styles.header}>
+                <h2 className={styles.title}>{assignment.title}</h2>
+                <p
+                    className={`${styles.due} ${isOverdue ? styles.overdue : ""}`}
+                >
+                    <CalendarClock size={14} strokeWidth={1.75} />
+                    Due{" "}
+                    {new Date(assignment.dueDate).toLocaleDateString(
+                        undefined,
+                        {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        },
+                    )}
+                    {isOverdue && " · Overdue"}
+                </p>
+            </div>
+
+            {/* Description */}
+            <div className={styles.card}>
+                <p className={styles.cardLabel}>Description</p>
+                <p className={styles.description}>{assignment.description}</p>
+            </div>
+
+            {/* Teacher's file */}
+            {assignment.fileUrl && (
+                <div className={styles.card}>
+                    <FileViewer
+                        fileUrl={assignment.fileUrl}
+                        fileType={assignment.fileType}
+                        label="Assignment File"
+                    />
+                </div>
+            )}
+            {/* Submission area — students only */}
+            {user.role === "student" && (
+                <div className={styles.card}>
+                    <p className={styles.cardLabel}>Your Submission</p>
+
+                    {submission ? (
+                        <div className={styles.alreadySubmitted}>
+                            <span className={styles.badge}>Submitted</span>
+                            <p className={styles.submittedHint}>
+                                Submitted on{" "}
+                                {new Date(
+                                    submission.submittedAt,
+                                ).toLocaleDateString(undefined, {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                })}
+                                .{" "}
+                                <button
+                                    className={styles.viewResultBtn}
+                                    onClick={() =>
+                                        navigate(
+                                            `/assignments/${assignment.id}/result`,
+                                        )
+                                    }
+                                >
+                                    View Result →
+                                </button>
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Mode toggle */}
+                            <div className={styles.modeToggle}>
+                                <button
+                                    className={`${styles.modeBtn} ${mode === "text" ? styles.activeModeBtn : ""}`}
+                                    onClick={() => setMode("text")}
+                                >
+                                    Write Text
+                                </button>
+                                <button
+                                    className={`${styles.modeBtn} ${mode === "file" ? styles.activeModeBtn : ""}`}
+                                    onClick={() => setMode("file")}
+                                >
+                                    Upload File
+                                </button>
+                            </div>
+
+                            {mode === "text" ? (
+                                <textarea
+                                    className={styles.textarea}
+                                    placeholder="Write your answer here..."
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    rows={8}
+                                />
+                            ) : (
+                                <div className={styles.fileZone}>
+                                    {file ? (
+                                        <div className={styles.filePill}>
+                                            <FileText
+                                                size={16}
+                                                strokeWidth={1.75}
+                                            />
+                                            <span>{file.name}</span>
+                                            <button
+                                                className={styles.removeFile}
+                                                onClick={() => setFile(null)}
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <label className={styles.fileLabel}>
+                                            <Upload
+                                                size={20}
+                                                strokeWidth={1.75}
+                                            />
+                                            <span>
+                                                Click to upload PDF or DOCX
+                                            </span>
+                                            <input
+                                                type="file"
+                                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                onChange={handleFileChange}
+                                                className={styles.hiddenInput}
+                                            />
+                                        </label>
+                                    )}
+                                    {fileError && (
+                                        <p className={styles.error}>
+                                            {fileError}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
+                            {submitError && (
+                                <p className={styles.error}>{submitError}</p>
+                            )}
+
+                            <button
+                                className={styles.submitBtn}
+                                onClick={handleSubmit}
+                                disabled={
+                                    submitting ||
+                                    (mode === "text" && !content.trim()) ||
+                                    (mode === "file" && !file)
+                                }
+                            >
+                                {submitting
+                                    ? "Submitting..."
+                                    : "Submit Assignment"}
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
