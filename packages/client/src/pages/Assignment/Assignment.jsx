@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CalendarClock, ChevronLeft, Upload, FileText, X } from "lucide-react";
+import { CalendarClock, ChevronLeft, Upload, FileText, X, ClipboardList, BookOpen } from "lucide-react";
 import useAssignment from "../../hooks/Assignment/useAssignment";
 import useStudentSubmission from "../../hooks/Submission/useStudentSubmission";
 import useSubmitAssignment from "../../hooks/Assignment/useSubmitAssignment";
+import useAllSubmissions from "../../hooks/Assignment/useAllSubmissions";
 import FileViewer from "../../components/FileViewer/FileViewer";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./assignment.module.css";
@@ -13,19 +14,67 @@ const ALLOWED_TYPES = [
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
+const TABS = [
+    { id: "details", label: "Details", icon: BookOpen },
+    { id: "submissions", label: "Submissions", icon: ClipboardList },
+];
+
+function SubmissionsTab({ assignmentId }) {
+    const { submissions, loading } = useAllSubmissions(assignmentId);
+
+    if (loading) return <div className={styles.tabLoading}>Loading submissions...</div>;
+    if (submissions.length === 0) return <p className={styles.empty}>No submissions yet.</p>;
+
+    return (
+        <div className={styles.submissionTable}>
+            <div className={styles.tableHeader}>
+                <span>Student</span>
+                <span>Submitted</span>
+                <span>AI Score</span>
+                <span>Status</span>
+            </div>
+            {submissions.map((s) => (
+                <div key={s.id} className={styles.tableRow}>
+                    <div className={styles.studentCell}>
+                        {s.user.profilePicture && (
+                            <img src={s.user.profilePicture} alt={s.user.name} width={26} height={26} className={styles.avatar} />
+                        )}
+                        <div>
+                            <p className={styles.studentName}>{s.user.name}</p>
+                            <p className={styles.studentEmail}>{s.user.email}</p>
+                        </div>
+                    </div>
+                    <span className={styles.dateCell}>
+                        {new Date(s.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                    </span>
+                    <span className={styles.scoreCell}>
+                        {s.result?.ai_percentage != null ? `${s.result.ai_percentage}%` : <span className={styles.skippedBadge}>Too short</span>}
+                    </span>
+                    <span>
+                        {s.result ? (
+                            s.result.isFlagged
+                                ? <span className={styles.flaggedBadge}>Flagged</span>
+                                : <span className={styles.cleanBadge}>Clean</span>
+                        ) : (
+                            <span className={styles.skippedBadge}>N/A</span>
+                        )}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export default function Assignment() {
     const { courseId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
 
     const { assignment, errors, loading } = useAssignment();
-    const {
-        submission,
-        setSubmission,
-        loading: subLoading,
-    } = useStudentSubmission();
+    const { submission, setSubmission, loading: subLoading } = useStudentSubmission();
     const { submit, error: submitError, submitting } = useSubmitAssignment();
 
+    const [tab, setTab] = useState("details");
     const [mode, setMode] = useState("text");
     const [content, setContent] = useState("");
     const [file, setFile] = useState(null);
@@ -60,174 +109,113 @@ export default function Assignment() {
     };
 
     if (loading || subLoading) return <div className="loading">Loading...</div>;
-    if (errors.length > 0)
-        return <div className="loading">Failed to load assignment.</div>;
+    if (errors.length > 0) return <div className="loading">Failed to load assignment.</div>;
 
     const isOverdue = new Date(assignment.dueDate) < new Date();
 
     return (
         <div className={styles.wrapper}>
-            <button
-                className={styles.back}
-                onClick={() => navigate(`/courses/${courseId}`)}
-            >
+            <button className={styles.back} onClick={() => navigate(`/courses/${courseId}`)}>
                 <ChevronLeft size={16} strokeWidth={1.75} />
                 Back to Course
             </button>
 
-            {/* Header */}
             <div className={styles.header}>
                 <h2 className={styles.title}>{assignment.title}</h2>
-                <p
-                    className={`${styles.due} ${isOverdue ? styles.overdue : ""}`}
-                >
+                <p className={`${styles.due} ${isOverdue ? styles.overdue : ""}`}>
                     <CalendarClock size={14} strokeWidth={1.75} />
-                    Due{" "}
-                    {new Date(assignment.dueDate).toLocaleDateString(
-                        undefined,
-                        {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                        },
-                    )}
+                    Due {new Date(assignment.dueDate).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
                     {isOverdue && " · Overdue"}
                 </p>
             </div>
 
-            {/* Description */}
-            <div className={styles.card}>
-                <p className={styles.cardLabel}>Description</p>
-                <p className={styles.description}>{assignment.description}</p>
-            </div>
-
-            {/* Teacher's file */}
-            {assignment.fileUrl && (
-                <div className={styles.card}>
-                    <FileViewer
-                        fileUrl={assignment.fileUrl}
-                        fileType={assignment.fileType}
-                        label="Assignment File"
-                    />
+            {user.role === "teacher" && (
+                <div className={styles.tabsRow}>
+                    {TABS.map(({ id, label, icon: Icon }) => (
+                        <button
+                            key={id}
+                            className={`${styles.tabBtn} ${tab === id ? styles.activeTab : ""}`}
+                            onClick={() => setTab(id)}
+                        >
+                            <Icon size={14} strokeWidth={1.75} />
+                            {label}
+                        </button>
+                    ))}
                 </div>
             )}
-            {/* Submission area — students only */}
-            {user.role === "student" && (
-                <div className={styles.card}>
-                    <p className={styles.cardLabel}>Your Submission</p>
 
-                    {submission ? (
-                        <div className={styles.alreadySubmitted}>
-                            <span className={styles.badge}>Submitted</span>
-                            <p className={styles.submittedHint}>
-                                Submitted on{" "}
-                                {new Date(
-                                    submission.submittedAt,
-                                ).toLocaleDateString(undefined, {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
-                                .{" "}
-                                <button
-                                    className={styles.viewResultBtn}
-                                    onClick={() =>
-                                        navigate(
-                                            `/assignments/${assignment.id}/result`,
-                                        )
-                                    }
-                                >
-                                    View Result →
-                                </button>
-                            </p>
+            {(user.role === "student" || tab === "details") && (
+                <>
+                    <div className={styles.card}>
+                        <p className={styles.cardLabel}>Description</p>
+                        <p className={styles.description}>{assignment.description}</p>
+                    </div>
+
+                    {assignment.fileUrl && (
+                        <div className={styles.card}>
+                            <FileViewer fileUrl={assignment.fileUrl} fileType={assignment.fileType} label="Assignment File" />
                         </div>
-                    ) : (
-                        <>
-                            {/* Mode toggle */}
-                            <div className={styles.modeToggle}>
-                                <button
-                                    className={`${styles.modeBtn} ${mode === "text" ? styles.activeModeBtn : ""}`}
-                                    onClick={() => setMode("text")}
-                                >
-                                    Write Text
-                                </button>
-                                <button
-                                    className={`${styles.modeBtn} ${mode === "file" ? styles.activeModeBtn : ""}`}
-                                    onClick={() => setMode("file")}
-                                >
-                                    Upload File
-                                </button>
-                            </div>
-
-                            {mode === "text" ? (
-                                <textarea
-                                    className={styles.textarea}
-                                    placeholder="Write your answer here..."
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                    rows={8}
-                                />
-                            ) : (
-                                <div className={styles.fileZone}>
-                                    {file ? (
-                                        <div className={styles.filePill}>
-                                            <FileText
-                                                size={16}
-                                                strokeWidth={1.75}
-                                            />
-                                            <span>{file.name}</span>
-                                            <button
-                                                className={styles.removeFile}
-                                                onClick={() => setFile(null)}
-                                            >
-                                                <X size={14} />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <label className={styles.fileLabel}>
-                                            <Upload
-                                                size={20}
-                                                strokeWidth={1.75}
-                                            />
-                                            <span>
-                                                Click to upload PDF or DOCX
-                                            </span>
-                                            <input
-                                                type="file"
-                                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                                onChange={handleFileChange}
-                                                className={styles.hiddenInput}
-                                            />
-                                        </label>
-                                    )}
-                                    {fileError && (
-                                        <p className={styles.error}>
-                                            {fileError}
-                                        </p>
-                                    )}
-                                </div>
-                            )}
-
-                            {submitError && (
-                                <p className={styles.error}>{submitError}</p>
-                            )}
-
-                            <button
-                                className={styles.submitBtn}
-                                onClick={handleSubmit}
-                                disabled={
-                                    submitting ||
-                                    (mode === "text" && !content.trim()) ||
-                                    (mode === "file" && !file)
-                                }
-                            >
-                                {submitting
-                                    ? "Submitting..."
-                                    : "Submit Assignment"}
-                            </button>
-                        </>
                     )}
-                </div>
+
+                    {user.role === "student" && (
+                        <div className={styles.card}>
+                            <p className={styles.cardLabel}>Your Submission</p>
+                            {submission ? (
+                                <div className={styles.alreadySubmitted}>
+                                    <span className={styles.badge}>Submitted</span>
+                                    <p className={styles.submittedHint}>
+                                        Submitted on {new Date(submission.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}.{" "}
+                                        <button className={styles.viewResultBtn} onClick={() => navigate(`/assignments/${assignment.id}/result`)}>
+                                            View Result →
+                                        </button>
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className={styles.modeToggle}>
+                                        <button className={`${styles.modeBtn} ${mode === "text" ? styles.activeModeBtn : ""}`} onClick={() => setMode("text")}>Write Text</button>
+                                        <button className={`${styles.modeBtn} ${mode === "file" ? styles.activeModeBtn : ""}`} onClick={() => setMode("file")}>Upload File</button>
+                                    </div>
+
+                                    {mode === "text" ? (
+                                        <textarea className={styles.textarea} placeholder="Write your answer here..." value={content} onChange={(e) => setContent(e.target.value)} rows={8} />
+                                    ) : (
+                                        <div className={styles.fileZone}>
+                                            {file ? (
+                                                <div className={styles.filePill}>
+                                                    <FileText size={16} strokeWidth={1.75} />
+                                                    <span>{file.name}</span>
+                                                    <button className={styles.removeFile} onClick={() => setFile(null)}><X size={14} /></button>
+                                                </div>
+                                            ) : (
+                                                <label className={styles.fileLabel}>
+                                                    <Upload size={20} strokeWidth={1.75} />
+                                                    <span>Click to upload PDF or DOCX</span>
+                                                    <input type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={handleFileChange} className={styles.hiddenInput} />
+                                                </label>
+                                            )}
+                                            {fileError && <p className={styles.error}>{fileError}</p>}
+                                        </div>
+                                    )}
+
+                                    {submitError && <p className={styles.error}>{submitError}</p>}
+
+                                    <button
+                                        className={styles.submitBtn}
+                                        onClick={handleSubmit}
+                                        disabled={submitting || (mode === "text" && !content.trim()) || (mode === "file" && !file)}
+                                    >
+                                        {submitting ? "Submitting..." : "Submit Assignment"}
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )}
+                </>
+            )}
+
+            {user.role === "teacher" && tab === "submissions" && (
+                <SubmissionsTab assignmentId={assignment.id} />
             )}
         </div>
     );

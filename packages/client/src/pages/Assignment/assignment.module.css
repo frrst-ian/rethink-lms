@@ -260,3 +260,114 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.tabsRow {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid #2a2d3a;
+    margin-bottom: 0.25rem;
+}
+
+.tabBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    color: var(--text2);
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.tabBtn:hover { color: var(--text); }
+
+.activeTab {
+    color: var(--sidebar-color);
+    border-bottom-color: var(--sidebar-color);
+}
+
+.tabLoading {
+    font-size: 0.875rem;
+    color: var(--text-sidebar);
+    padding: 1rem 0;
+}
+
+.empty {
+    font-size: 0.875rem;
+    color: var(--text-sidebar);
+    padding: 0.5rem 0;
+}
+
+.submissionTable {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1fr;
+    padding: 0.4rem 1rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1fr;
+    align-items: center;
+    background: var(--s-background);
+    border-radius: 0.5rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid #2a2840;
+}
+
+.studentCell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.avatar { border-radius: 50%; flex-shrink: 0; }
+
+.studentName {
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+.studentEmail {
+    font-size: 0.72rem;
+    color: var(--text2);
+}
+
+.dateCell {
+    font-size: 0.78rem;
+    color: var(--text2);
+}
+
+.scoreCell {
+    font-size: 0.82rem;
+    color: var(--text);
+}
+
+.flaggedBadge,
+.cleanBadge,
+.skippedBadge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+}
+
+.flaggedBadge { background: #3d1a1a; color: #ff6b6b; }
+.cleanBadge { background: #1a3d2b; color: #4caf82; }
+.skippedBadge { background: #2a2a1a; color: #c8b84a; font-weight: 400; }
