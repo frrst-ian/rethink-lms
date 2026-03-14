@@ -36,6 +36,7 @@ const authRouter = require("./routes/authRouter");
 const courseRouter = require("./routes/courseRouter");
 const assignmentRouter = require("./routes/assignmentRouter");
 const submissionRouter = require("./routes/submissionRouter");
+const dashboardRouter = require("./routes/dashboardRouter");
 
 const errorHandler = require("./middleware/errorHandler");
 
@@ -44,6 +45,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
 app.use("/api/assignments", assignmentRouter);
 app.use("/api/submissions", submissionRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.use(errorHandler);
 

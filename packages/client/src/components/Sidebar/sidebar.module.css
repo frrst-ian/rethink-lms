@@ -23,7 +23,6 @@
     width: 200px;
 }
 
-/* Header row */
 .header {
     display: flex;
     align-items: center;
@@ -66,9 +65,7 @@
     border: none;
     color: var(--text-sidebar);
     cursor: pointer;
-    transition:
-        background 0.15s,
-        color 0.15s;
+    transition: background 0.15s, color 0.15s;
     flex-shrink: 0;
 }
 
@@ -77,7 +74,6 @@
     color: #e4eaeb;
 }
 
-/* Nav items */
 .navItem {
     position: relative;
     display: flex;
@@ -90,21 +86,19 @@
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
-    transition:
-        background 0.15s,
-        color 0.15s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .navItem:hover {
     background: var(--sidebar-hover);
     color: #e4eaeb;
 }
+
 .navItem.active {
     background: #2d1f6e;
     color: var(--sidebar-color);
 }
 
-/* Tooltip — only when collapsed */
 .navItem::after {
     content: attr(data-label);
     position: absolute;
@@ -120,9 +114,9 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.15s;
+    white-space: nowrap;
 }
 
-/* Only show tooltip when sidebar is NOT expanded */
 .sidebar:not(.expanded) .navItem:hover::after {
     opacity: 1;
 }
@@ -132,9 +126,7 @@
     margin-left: 0.3rem;
 }
 
-.icon {
-    flex-shrink: 0;
-}
+.icon { flex-shrink: 0; }
 
 .label {
     font-size: 0.85rem;
@@ -153,4 +145,87 @@
 .bottom {
     margin-top: auto;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 50px;
+    padding: 0 11px;
+    white-space: nowrap;
+    border-top: 1px solid #2a2840;
+    margin-bottom: 0.25rem;
+}
+
+.profile::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1f1d32;
+    color: #e4eaeb;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #2a2840;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+}
+
+.sidebar:not(.expanded) .profile:hover::after {
+    opacity: 1;
+}
+
+.avatar {
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.sidebar.expanded .profileInfo {
+    opacity: 1;
+}
+
+.profileName {
+    font-size: 0.82rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profileRole {
+    font-size: 0.7rem;
+    color: var(--text-sidebar);
+    text-transform: capitalize;
+}
+
+.logoutBtn {
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    font-size: inherit;
+}
+
+.logoutBtn:hover {
+    background: var(--sidebar-hover);
+    color: #ff6b6b;
 }

@@ -86,7 +86,7 @@ a.btn:hover {
     border-radius: 0.5rem;
     padding: 0.5rem 0.45rem;
     width: 100%;
-    background: #484854;
+    background: #2f696d;
     color: var(--text);
     transition: all 0.3s ease;
     display: flex;

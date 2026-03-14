@@ -1,11 +1,10 @@
 .dashWrapper {
-    padding: 2rem 2rem 2rem 6rem;
+    padding: 2rem 6rem 2rem 6rem;
     min-height: 100vh;
     color: var(--text);
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
-    max-width: 900px;
 }
 
 .pageHeader { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -22,7 +21,7 @@
 
 .statGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 1rem;
 }
 
@@ -35,6 +34,17 @@
     gap: 0.75rem;
     border: 1px solid #2a2840;
     transition: border-color 0.15s;
+}
+
+.trendCard {
+    background: var(--s-background);
+    border-radius: 0.6rem;
+    padding: 1.2rem;
+    border: 1px solid #2a2840;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 900px;
 }
 
 .statCard:hover { border-color: #3a3860; }
@@ -77,15 +87,48 @@
     gap: 0.5rem;
 }
 
-.chartCardWarning {
-    border-color: #3d1a1a;
-}
+.chartCardWarning { border-color: #3d1a1a; }
 
 .cardLabel {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-sidebar);
+}
+
+.cardSub {
+    font-size: 0.75rem;
+    color: var(--text-sidebar);
+    opacity: 0.7;
+    margin-top: -0.25rem;
+}
+
+.chartTooltip {
+    background: var(--s-background);
+    border: 1px solid #2a2840;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.tooltipWeek {
+    font-size: 0.72rem;
+    color: var(--text-sidebar);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tooltipValue {
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: "Roboto";
+}
+
+.tooltipCount {
+    font-size: 0.75rem;
+    color: var(--text2);
 }
 
 .gaugeWrapper {
@@ -178,6 +221,7 @@
     border: 1px solid #2a2840;
     text-decoration: none;
     transition: border-color 0.15s;
+    max-width: 900px;
 }
 
 .submissionRow:hover { border-color: #3a3860; }
@@ -223,9 +267,9 @@
     border-radius: 999px;
 }
 
-.flaggedBadge { background: #3d1a1a; color: #ff6b6b; }
+.flaggedBadge { background: #3d1a1a; color: #ef517a; }
 .cleanBadge { background: #1a3d2b; color: #4caf82; }
-.skippedBadge { background: #2a2a1a; color: #c8b84a; }
+.skippedBadge { background: #2a2a1a; color: #c8b84a; font-weight: 400; }
 
 .dueDate {
     font-size: 0.78rem;
