@@ -13,18 +13,16 @@ async function detectAI(content) {
         };
     }
 
+    const truncated = words.slice(0, 400).join(" ");
+
     const output = await client.textClassification({
         model: "PirateXX/AI-Content-Detector",
-        inputs: content,
+        inputs: truncated,
         provider: "hf-inference",
     });
-    
-    const fakeScore = output.find((r) => r.label === "LABEL_0")?.score ?? 0;
 
-    return {
-        ai_percentage: fakeScore,
-        isFlagged: fakeScore > 0.6,
-    };
+    const aiScore = output.find((r) => r.label === "LABEL_0")?.score ?? 0;
+    return { ai_percentage: aiScore, isFlagged: aiScore > 0.6 };
 }
 
 module.exports = detectAI;

@@ -1,0 +1,134 @@
+.wrapper {
+    min-height: 100vh;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem 2rem;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s;
+    width: fit-content;
+}
+
+.back:hover { color: var(--text); }
+
+.header { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.title {
+    font-size: 1.8rem;
+    color: var(--c-color);
+}
+
+.sub {
+    font-size: 0.9rem;
+    color: var(--text2);
+}
+
+.card {
+    background: var(--s-background);
+    border-radius: 0.6rem;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border: 1px solid #2a2840;
+}
+
+.cardLabel {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+}
+
+.flagRow { display: flex; }
+
+.flaggedBadge,
+.cleanBadge,
+.skippedBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+.flaggedBadge { background: #3d1a1a; color: #ff6b6b; }
+.cleanBadge { background: #1a3d2b; color: #4caf82; }
+.skippedBadge { background: #2a2a1a; color: #c8b84a; font-weight: 400; }
+
+.bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.barRow {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.barLabel {
+    font-size: 0.82rem;
+    color: var(--text2);
+    width: 52px;
+    flex-shrink: 0;
+}
+
+.barTrack {
+    flex: 1;
+    height: 10px;
+    background: var(--background);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barFill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+.aiFill { background: #ef517a; }
+.humanFill { background: #4caf82; }
+
+.barPct {
+    font-size: 0.82rem;
+    color: var(--text2);
+    width: 44px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.suggestionCard { border-color: #3d2a1a; }
+
+.suggestionText {
+    font-size: 0.95rem;
+    color: var(--text2);
+    line-height: 1.75;
+    white-space: pre-wrap;
+}
+
+.content {
+    font-size: 0.95rem;
+    color: var(--text2);
+    line-height: 1.75;
+    white-space: pre-wrap;
+}

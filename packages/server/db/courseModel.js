@@ -113,9 +113,16 @@ async function deleteCourse(id) {
 }
 
 async function getCourseByCode(code) {
-    return await prisma.course.findUnique({ where: { code } });
+    return await prisma.course.findUnique({
+        where: { code },
+        include: {
+            createdBy: {
+                select: { name: true, email: true, profilePicture: true },
+            },
+            _count: { select: { enrollments: true } },
+        },
+    });
 }
-
 module.exports = {
     getAllCourses,
     getCourseById,

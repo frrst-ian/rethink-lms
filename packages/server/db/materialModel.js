@@ -33,6 +33,11 @@ async function createMaterial(
             publicId,
             originalName,
         },
+        include: {
+            author: {
+                select: { name: true },
+            },
+        },
     });
 }
 
