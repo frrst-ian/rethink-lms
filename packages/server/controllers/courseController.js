@@ -37,11 +37,17 @@ async function enrollStudent(req, res) {
     const course = await db.getCourseById(courseId);
     ensureExists(course, "Course");
 
+    if (course.userId === userId) {
+        return res
+            .status(403)
+            .json({ errors: ["Teachers cannot enroll in their own course."] });
+    }
+
     const existingEnrollment = await db.checkEnrollment(userId, courseId);
     if (existingEnrollment) {
         return res
             .status(409)
-            .json({ errors: ["Already enrolled in this course"] });
+            .json({ errors: ["Already enrolled in this course."] });
     }
 
     await db.enrollStudent(userId, courseId);
@@ -69,7 +75,6 @@ async function createAssignment(req, res) {
             req.file.mimetype,
             req.file.originalname,
         );
-
         fileUrl = result.secure_url;
         fileType = result.fileType;
         originalName = req.file.originalname.replace(/\.[^.]+$/, "");
@@ -78,6 +83,13 @@ async function createAssignment(req, res) {
     const { title, description, dueDate } = req.body;
     const courseId = validateId(req.params.courseId, "Course ID");
     const userId = req.user.id;
+
+    const course = await db.getCourseById(courseId);
+    ensureExists(course, "Course");
+
+    if (course.userId !== userId) {
+        return res.status(403).json({ errors: ["Forbidden"] });
+    }
 
     const newAssignment = await db.createAssignment(
         title,
@@ -93,9 +105,14 @@ async function createAssignment(req, res) {
 }
 
 async function deleteCourse(req, res) {
-    const id = validateId(req.params.id, "Course Id");
+    const id = validateId(req.params.id, "Course ID");
     const course = await db.getCourseById(id);
     ensureExists(course, "Course");
+
+    if (course.userId !== req.user.id) {
+        return res.status(403).json({ errors: ["Forbidden"] });
+    }
+
     await db.deleteCourse(id);
     return res.json({ message: "Course deleted successfully" });
 }

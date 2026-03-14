@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Navigate } from "react-router-dom";
 
@@ -12,14 +13,16 @@ const isTokenExpired = (token) => {
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading, logout } = useAuth();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (user && (!token || isTokenExpired(token))) {
+            logout();
+        }
+    }, [user]);
+
     if (loading) return <div className="loading">Loading...</div>;
     if (!user) return <Navigate to="/login" replace />;
-
-    const token = localStorage.getItem("token");
-    if (!token || isTokenExpired(token)) {
-        logout();
-        return <Navigate to="/login" replace />;
-    }
 
     return children;
 };

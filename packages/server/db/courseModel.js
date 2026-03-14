@@ -29,21 +29,11 @@ async function getCourseById(id) {
         where: { id },
         include: {
             createdBy: {
-                select: {
-                    name: true,
-                    email: true,
-                    profilePicture: true,
-                },
+                select: { name: true, email: true, profilePicture: true },
             },
             assignments: {
-                select: {
-                    id: true,
-                    title: true,
-                    dueDate: true,
-                },
-                orderBy: {
-                    dueDate: "asc",
-                },
+                select: { id: true, title: true, dueDate: true },
+                orderBy: { dueDate: "asc" },
             },
             enrollments: {
                 include: {
@@ -57,11 +47,7 @@ async function getCourseById(id) {
                     },
                 },
             },
-            _count: {
-                select: {
-                    enrollments: true,
-                },
-            },
+            _count: { select: { enrollments: true } },
         },
     });
     return course;
@@ -69,19 +55,10 @@ async function getCourseById(id) {
 
 async function createCourse(title, section, code, userId) {
     const newCourse = await prisma.course.create({
-        data: {
-            title,
-            section,
-            code,
-            userId,
-        },
+        data: { title, section, code, userId },
         include: {
             createdBy: {
-                select: {
-                    name: true,
-                    email: true,
-                    profilePicture: true,
-                },
+                select: { name: true, email: true, profilePicture: true },
             },
             _count: { select: { enrollments: true } },
         },
@@ -91,30 +68,19 @@ async function createCourse(title, section, code, userId) {
 
 async function checkEnrollment(userId, courseId) {
     return await prisma.enrollment.findUnique({
-        where: {
-            userId_courseId: {
-                userId,
-                courseId,
-            },
-        },
+        where: { userId_courseId: { userId, courseId } },
     });
 }
 
 async function enrollStudent(userId, courseId) {
     return await prisma.enrollment.create({
-        data: {
-            userId,
-            courseId,
-        },
+        data: { userId, courseId },
     });
 }
 
 async function getAssignmentById(courseId, id) {
     return await prisma.assignment.findUnique({
-        where: {
-            courseId: courseId,
-            id: id,
-        },
+        where: { courseId, id },
     });
 }
 
@@ -143,15 +109,11 @@ async function createAssignment(
 }
 
 async function deleteCourse(id) {
-    return await prisma.course.delete({
-        where: { id },
-    });
+    return await prisma.course.delete({ where: { id } });
 }
 
 async function getCourseByCode(code) {
-    return await prisma.course.findUnique({
-        where: { code },
-    });
+    return await prisma.course.findUnique({ where: { code } });
 }
 
 module.exports = {

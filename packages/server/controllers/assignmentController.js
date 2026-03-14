@@ -1,5 +1,6 @@
 const db = require("../db/assignmentModel");
 const resultModel = require("../db/resultModel");
+const prisma = require("../lib/prisma");
 const { uploadToCloudinary } = require("../config/cloudinary");
 const extractText = require("../helpers/extractText");
 const generateSuggestion = require("../helpers/generateSuggestion");
@@ -7,17 +8,36 @@ const { validateId, ensureExists } = require("../helpers/validators");
 const detectAI = require("../helpers/detectAI");
 
 async function getAllSubmissions(req, res) {
-    const assignmentId = validateId(req.params.id, "Assign ID");
+    const assignmentId = validateId(req.params.id, "Assignment ID");
+
+    const assignment = await db.getAssignmentById(assignmentId);
+    ensureExists(assignment, "Assignment");
+
+    if (assignment.userId !== req.user.id) {
+        return res.status(403).json({ errors: ["Forbidden"] });
+    }
+
     const submissions = await db.getAllSubmissions(assignmentId);
     return res.json(submissions);
 }
 
 async function getStudentSubmission(req, res) {
     const userId = req.user.id;
-    const assignmentId = validateId(req.params.id, "Assign ID");
-    const assignment = await db.getStudentSubmission(userId, assignmentId);
-    ensureExists(assignment, "Student Submission");
-    return res.json(assignment);
+    const assignmentId = validateId(req.params.id, "Assignment ID");
+
+    const assignment = await db.getAssignmentById(assignmentId);
+    ensureExists(assignment, "Assignment");
+
+    const enrolled = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId, courseId: assignment.courseId } },
+    });
+    if (!enrolled) {
+        return res.status(403).json({ errors: ["You are not enrolled in this course."] });
+    }
+
+    const submission = await db.getStudentSubmission(userId, assignmentId);
+    ensureExists(submission, "Student Submission");
+    return res.json(submission);
 }
 
 async function getAssignment(req, res) {
@@ -38,7 +58,6 @@ async function submitAssignment(req, res) {
             req.file.mimetype,
             req.file.originalname,
         );
-
         fileUrl = result.secure_url;
         fileType = result.fileType;
         originalName = req.file.originalname.replace(/\.[^.]+$/, "");
@@ -48,25 +67,24 @@ async function submitAssignment(req, res) {
     const userId = req.user.id;
     const assignmentId = validateId(req.params.id, "Assignment ID");
 
-    const existingAssignmentSubmission = await db.getStudentSubmission(
-        userId,
-        assignmentId,
-    );
-    if (existingAssignmentSubmission) {
-        return res
-            .status(409)
-            .json({ errors: ["Assignment submission already exist"] });
+    const assignment = await db.getAssignmentById(assignmentId);
+    ensureExists(assignment, "Assignment");
+
+    const enrolled = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId, courseId: assignment.courseId } },
+    });
+    if (!enrolled) {
+        return res.status(403).json({ errors: ["You are not enrolled in this course."] });
+    }
+
+    const existingSubmission = await db.getStudentSubmission(userId, assignmentId);
+    if (existingSubmission) {
+        return res.status(409).json({ errors: ["Assignment submission already exists."] });
     }
 
     const submission = await db.submitAssignment(
-        content,
-        assignmentId,
-        userId,
-        fileUrl,
-        fileType,
-        originalName,
+        content, assignmentId, userId, fileUrl, fileType, originalName,
     );
-
     ensureExists(submission, "Submitted Assignment");
 
     let textContent = content;
@@ -77,17 +95,11 @@ async function submitAssignment(req, res) {
     const detection = await detectAI(textContent);
 
     if (!detection.skipped) {
-        const aiPercentageFormatted = parseFloat(
-            (detection.ai_percentage * 100).toFixed(2),
-        );
-        const humanPercentageFormatted = parseFloat(
-            ((1 - detection.ai_percentage) * 100).toFixed(2),
-        );
+        const aiPercentageFormatted = parseFloat((detection.ai_percentage * 100).toFixed(2));
+        const humanPercentageFormatted = parseFloat(((1 - detection.ai_percentage) * 100).toFixed(2));
 
         const result = await resultModel.createResult(
-            submission.id,
-            aiPercentageFormatted,
-            detection.isFlagged,
+            submission.id, aiPercentageFormatted, detection.isFlagged,
         );
 
         if (detection.isFlagged) {
@@ -103,18 +115,24 @@ async function submitAssignment(req, res) {
         });
     }
 
-    return res.status(201).json({
-        submission,
-        skipped: true,
-        reason: detection.reason,
-    });
+    return res.status(201).json({ submission, skipped: true, reason: detection.reason });
 }
 
 async function resetSubmission(req, res) {
     const assignmentId = validateId(req.params.id, "Assignment ID");
     const { studentId } = req.body;
-    const submission = await db.getStudentSubmission(studentId, assignmentId);
+
+    const assignment = await db.getAssignmentById(assignmentId);
+    ensureExists(assignment, "Assignment");
+
+    if (assignment.userId !== req.user.id) {
+        return res.status(403).json({ errors: ["Forbidden"] });
+    }
+
+    const parsedStudentId = validateId(studentId, "Student ID");
+    const submission = await db.getStudentSubmission(parsedStudentId, assignmentId);
     ensureExists(submission, "Submission");
+
     await db.deleteSubmission(submission.id);
     return res.json({ message: "Submission reset. Student can resubmit." });
 }

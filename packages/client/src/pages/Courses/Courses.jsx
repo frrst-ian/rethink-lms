@@ -10,7 +10,11 @@ import { useAuth } from "../../context/AuthContext";
 
 function CourseCard({ course: c, index }) {
     return (
-        <div className={styles.course} style={{ animationDelay: `${index * 60}ms` }}>
+        <NavLink
+            to={`/courses/${c.id}`}
+            className={styles.course}
+            style={{ animationDelay: `${index * 60}ms` }}
+        >
             <p className={styles.title}>{c.title}</p>
             {c.section && (
                 <div className={styles.section}>
@@ -20,7 +24,11 @@ function CourseCard({ course: c, index }) {
             )}
             <div className={styles.teacherInfo}>
                 {c.createdBy.profilePicture && (
-                    <img src={c.createdBy.profilePicture} alt="pfp" width={22} />
+                    <img
+                        src={c.createdBy.profilePicture}
+                        alt="pfp"
+                        width={22}
+                    />
                 )}
                 <p>{c.createdBy.name}</p>
             </div>
@@ -28,11 +36,10 @@ function CourseCard({ course: c, index }) {
                 <Users size={20} />
                 <p>{c._count.enrollments} enrolled</p>
             </div>
-            <div className={styles.code}>Code: <span>{c.code}</span></div>
-            <NavLink to={`/courses/${c.id}`}>
-                <Button type="viewBtn" label="View Course" />
-            </NavLink>
-        </div>
+            <div className={styles.code}>
+                Code: <span>{c.code}</span>
+            </div>
+        </NavLink>
     );
 }
 
@@ -58,7 +65,10 @@ function CreateCourseModal({ onClose, onCreated }) {
                 </div>
                 <form className={styles.modalForm} onSubmit={handleSubmit}>
                     <div className={styles.fieldGroup}>
-                        <label htmlFor="title">Course Title <span className={styles.required}>*</span></label>
+                        <label htmlFor="title">
+                            Course Title{" "}
+                            <span className={styles.required}>*</span>
+                        </label>
                         <input
                             id="title"
                             className={styles.modalInput}
@@ -70,7 +80,10 @@ function CreateCourseModal({ onClose, onCreated }) {
                         />
                     </div>
                     <div className={styles.fieldGroup}>
-                        <label htmlFor="section">Section <span className={styles.optional}>(optional)</span></label>
+                        <label htmlFor="section">
+                            Section{" "}
+                            <span className={styles.optional}>(optional)</span>
+                        </label>
                         <input
                             id="section"
                             className={styles.modalInput}
@@ -82,8 +95,18 @@ function CreateCourseModal({ onClose, onCreated }) {
                     </div>
                     {error && <p className={styles.modalError}>{error}</p>}
                     <div className={styles.modalActions}>
-                        <button type="button" className={styles.cancelBtn} onClick={onClose}>Cancel</button>
-                        <button type="submit" className={styles.createBtn} disabled={loading}>
+                        <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className={styles.createBtn}
+                            disabled={loading}
+                        >
                             {loading ? "Creating..." : "Create Course"}
                         </button>
                     </div>
@@ -114,23 +137,40 @@ function EnrollModal({ onClose, onEnrolled }) {
                 </div>
                 <form className={styles.modalForm} onSubmit={handleSubmit}>
                     <div className={styles.fieldGroup}>
-                        <label htmlFor="code">Course Code <span className={styles.required}>*</span></label>
+                        <label htmlFor="code">
+                            Course Code{" "}
+                            <span className={styles.required}>*</span>
+                        </label>
                         <input
                             id="code"
                             className={`${styles.modalInput} ${styles.codeInput}`}
                             type="text"
                             value={code}
-                            onChange={(e) => setCode(e.target.value.toUpperCase())}
+                            onChange={(e) =>
+                                setCode(e.target.value.toUpperCase())
+                            }
                             placeholder="e.g. A1B2C3"
                             maxLength={6}
                             required
                         />
-                        <p className={styles.hint}>Ask your teacher for the course code.</p>
+                        <p className={styles.hint}>
+                            Ask your teacher for the course code.
+                        </p>
                     </div>
                     {error && <p className={styles.modalError}>{error}</p>}
                     <div className={styles.modalActions}>
-                        <button type="button" className={styles.cancelBtn} onClick={onClose}>Cancel</button>
-                        <button type="submit" className={styles.createBtn} disabled={loading}>
+                        <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className={styles.createBtn}
+                            disabled={loading}
+                        >
                             {loading ? "Joining..." : "Join Course"}
                         </button>
                     </div>
@@ -157,33 +197,43 @@ export default function Courses() {
     };
 
     if (loading) return <div className="loading">Loading...</div>;
-    if (errors.length > 0) return <div className="error">Failed to load courses.</div>;
+    if (errors.length > 0)
+        return <div className="error">Failed to load courses.</div>;
 
     return (
         <div className={styles.coursesWrapper}>
             <div className={styles.pageHeader}>
                 <h1>My Courses</h1>
                 {user?.role === "teacher" && (
-                    <button className={styles.createCourseBtn} onClick={() => setCreateOpen(true)}>
+                    <button
+                        className={styles.createCourseBtn}
+                        onClick={() => setCreateOpen(true)}
+                    >
                         + New Course
                     </button>
                 )}
                 {user?.role === "student" && (
-                    <button className={styles.createCourseBtn} onClick={() => setEnrollOpen(true)}>
+                    <button
+                        className={styles.createCourseBtn}
+                        onClick={() => setEnrollOpen(true)}
+                    >
                         + Join Course
                     </button>
                 )}
             </div>
 
             <div className={styles.courses}>
-                {courses.length === 0
-                    ? <p className={styles.empty}>
+                {courses.length === 0 ? (
+                    <p className={styles.empty}>
                         {user?.role === "student"
                             ? `You haven't joined any courses yet. Click "+ Join Course" to get started.`
                             : "No courses yet."}
-                      </p>
-                    : courses.map((c, i) => <CourseCard key={c.id} course={c} index={i} />)
-                }
+                    </p>
+                ) : (
+                    courses.map((c, i) => (
+                        <CourseCard key={c.id} course={c} index={i} />
+                    ))
+                )}
             </div>
 
             {createOpen && (

@@ -2,22 +2,11 @@ const prisma = require("../lib/prisma");
 
 async function getAllSubmissions(assignId) {
     return prisma.submission.findMany({
-        where: {
-            assignmentId: assignId,
-        },
+        where: { assignmentId: assignId },
         include: {
-            result: {
-                include: {
-                    suggestion: true,
-                },
-            },
+            result: { include: { suggestion: true } },
             user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    profilePicture: true,
-                },
+                select: { id: true, name: true, email: true, profilePicture: true },
             },
         },
     });
@@ -25,44 +14,19 @@ async function getAllSubmissions(assignId) {
 
 async function getStudentSubmission(userId, assignmentId) {
     return await prisma.submission.findFirst({
-        where: {
-            userId: userId,
-            assignmentId: assignmentId,
-        },
-        include: {
-            result: {
-                include: {
-                    suggestion: true,
-                },
-            },
-        },
+        where: { userId, assignmentId },
+        include: { result: { include: { suggestion: true } } },
     });
 }
 
-async function submitAssignment(
-    content,
-    assignmentId,
-    userId,
-    fileUrl,
-    fileType,
-    originalName,
-) {
+async function submitAssignment(content, assignmentId, userId, fileUrl, fileType, originalName) {
     return await prisma.submission.create({
-        data: {
-            content,
-            userId,
-            assignmentId,
-            fileUrl,
-            fileType,
-            originalName,
-        },
+        data: { content, userId, assignmentId, fileUrl, fileType, originalName },
     });
 }
 
 async function deleteSubmission(id) {
-    return await prisma.submission.delete({
-        where: { id },
-    });
+    return await prisma.submission.delete({ where: { id } });
 }
 
 async function getAssignmentById(id) {
@@ -76,6 +40,8 @@ async function getAssignmentById(id) {
             fileUrl: true,
             fileType: true,
             originalName: true,
+            courseId: true,
+            userId: true,
         },
     });
 }

@@ -8,7 +8,9 @@ export default function useAllSubmissions(assignmentId) {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const { data } = await client.get(`/assignments/${assignmentId}/submissions`);
+                const { data } = await client.get(
+                    `/assignments/${assignmentId}/submissions`,
+                );
                 setSubmissions(data);
             } finally {
                 setLoading(false);
@@ -17,5 +19,5 @@ export default function useAllSubmissions(assignmentId) {
         fetch();
     }, [assignmentId]);
 
-    return { submissions, loading };
+    return { submissions, setSubmissions, loading };
 }

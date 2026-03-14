@@ -5,6 +5,7 @@ import useAssignment from "../../hooks/Assignment/useAssignment";
 import useStudentSubmission from "../../hooks/Submission/useStudentSubmission";
 import useSubmitAssignment from "../../hooks/Assignment/useSubmitAssignment";
 import useAllSubmissions from "../../hooks/Assignment/useAllSubmissions";
+import useResetSubmission from "../../hooks/Assignment/useResetSubmission";
 import FileViewer from "../../components/FileViewer/FileViewer";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./assignment.module.css";
@@ -20,7 +21,16 @@ const TABS = [
 ];
 
 function SubmissionsTab({ assignmentId }) {
-    const { submissions, loading } = useAllSubmissions(assignmentId);
+    const { submissions, setSubmissions, loading } = useAllSubmissions(assignmentId);
+    const { reset, resettingId } = useResetSubmission(assignmentId);
+    const [confirmId, setConfirmId] = useState(null);
+
+    const handleReset = async (studentId) => {
+        await reset(studentId, (id) => {
+            setSubmissions((prev) => prev.filter((s) => s.user.id !== id));
+            setConfirmId(null);
+        });
+    };
 
     if (loading) return <div className={styles.tabLoading}>Loading submissions...</div>;
     if (submissions.length === 0) return <p className={styles.empty}>No submissions yet.</p>;
@@ -32,6 +42,7 @@ function SubmissionsTab({ assignmentId }) {
                 <span>Submitted</span>
                 <span>AI Score</span>
                 <span>Status</span>
+                <span></span>
             </div>
             {submissions.map((s) => (
                 <div key={s.id} className={styles.tableRow}>
@@ -48,7 +59,9 @@ function SubmissionsTab({ assignmentId }) {
                         {new Date(s.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
                     </span>
                     <span className={styles.scoreCell}>
-                        {s.result?.ai_percentage != null ? `${s.result.ai_percentage}%` : <span className={styles.skippedBadge}>Too short</span>}
+                        {s.result?.ai_percentage != null
+                            ? `${s.result.ai_percentage}%`
+                            : <span className={styles.skippedBadge}>Too short</span>}
                     </span>
                     <span>
                         {s.result ? (
@@ -57,6 +70,25 @@ function SubmissionsTab({ assignmentId }) {
                                 : <span className={styles.cleanBadge}>Clean</span>
                         ) : (
                             <span className={styles.skippedBadge}>N/A</span>
+                        )}
+                    </span>
+                    <span className={styles.resetCell}>
+                        {confirmId === s.user.id ? (
+                            <div className={styles.confirmRow}>
+                                <span className={styles.confirmText}>Reset?</span>
+                                <button
+                                    className={styles.confirmYes}
+                                    onClick={() => handleReset(s.user.id)}
+                                    disabled={resettingId === s.user.id}
+                                >
+                                    {resettingId === s.user.id ? "..." : "Yes"}
+                                </button>
+                                <button className={styles.confirmNo} onClick={() => setConfirmId(null)}>No</button>
+                            </div>
+                        ) : (
+                            <button className={styles.resetBtn} onClick={() => setConfirmId(s.user.id)}>
+                                Reset
+                            </button>
                         )}
                     </span>
                 </div>
