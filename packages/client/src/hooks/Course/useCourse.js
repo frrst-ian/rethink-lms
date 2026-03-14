@@ -27,5 +27,5 @@ export default function useCourse() {
         fetchCourse();
     }, [id]);
 
-    return { course, errors, loading };
+    return { course, setCourse, errors, loading };
 }

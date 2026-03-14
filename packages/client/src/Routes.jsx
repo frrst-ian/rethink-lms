@@ -8,6 +8,7 @@ import Courses from "./pages/Courses/Courses";
 import Course from "./pages/Course/Course";
 import Assignment from "./pages/Assignment/Assignment";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Result from "./pages/Result/Result";
 import ProtectedRoute from "./components/Utils/ProtectedRoutes";
 import Layout from "./components/Layout/Layout";
 
@@ -24,19 +25,43 @@ const AppRoutes = () => {
             <Route element={<Layout />}>
                 <Route
                     path="dashboard"
-                    element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="courses"
-                    element={<ProtectedRoute><Courses /></ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <Courses />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="courses/:id"
-                    element={<ProtectedRoute><Course /></ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <Course />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="courses/:courseId/assignments/:assignmentId"
-                    element={<ProtectedRoute><Assignment /></ProtectedRoute>}
+                    element={
+                        <ProtectedRoute>
+                            <Assignment />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="assignments/:id/result"
+                    element={
+                        <ProtectedRoute>
+                            <Result />
+                        </ProtectedRoute>
+                    }
                 />
             </Route>
         </Routes>
