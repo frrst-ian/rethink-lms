@@ -1,0 +1,291 @@
+.wrapper {
+    padding: 2rem 2rem 2rem 6rem;
+    min-height: 100vh;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.pageHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pageTitle {
+    font-size: 2rem;
+    color: var(--c-color);
+}
+
+.pageSub {
+    font-size: 0.875rem;
+    color: var(--text2);
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.groupLabel {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+    padding-left: 0.25rem;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--s-background);
+    border: 1px solid #2a2840;
+    border-radius: 0.5rem;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: border-color 0.15s, background 0.15s;
+    gap: 1rem;
+}
+
+.row:hover {
+    border-color: #3a3860;
+    background: #161424;
+}
+
+.rowLeft {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.rowIcon {
+    color: var(--text-sidebar);
+    flex-shrink: 0;
+}
+
+.rowTitle {
+    font-size: 0.9rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rowDue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--text2);
+    margin-top: 0.15rem;
+}
+
+.rowRight {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.overdue {
+    color: #ff5959;
+}
+
+.pendingBadge,
+.doneBadge,
+.flaggedBadge,
+.countBadge,
+.attachBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+}
+
+.pendingBadge {
+    background: #2a2a1a;
+    color: #c8b84a;
+    font-weight: 400;
+}
+
+.doneBadge {
+    background: #1a3d2b;
+    color: #4caf82;
+}
+
+.flaggedBadge {
+    background: #3d1a1a;
+    color: #ef517a;
+}
+
+.countBadge {
+    background: var(--background);
+    color: var(--text2);
+    font-weight: 400;
+}
+
+.attachBadge {
+    background: var(--background);
+    color: var(--text-sidebar);
+    font-weight: 400;
+}
+
+.empty {
+    color: var(--text-sidebar);
+    font-size: 0.875rem;
+}
+
+/* Modal */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    backdrop-filter: blur(2px);
+    padding: 1rem;
+}
+
+.modal {
+    background: var(--s-background);
+    border: 1px solid #2a2840;
+    border-radius: 0.8rem;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.4rem 1.4rem 1rem;
+    border-bottom: 1px solid #2a2840;
+    gap: 1rem;
+}
+
+.modalCourse {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+    margin-bottom: 0.3rem;
+}
+
+.modalTitle {
+    font-size: 1.2rem;
+    color: var(--c-color);
+    margin-bottom: 0.35rem;
+}
+
+.modalDue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--text2);
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: var(--text-sidebar);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+
+.closeBtn:hover {
+    color: var(--text);
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.2rem 1.4rem 1.4rem;
+    overflow-y: auto;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.sectionLabel {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-sidebar);
+}
+
+.description {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+.submittedRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat {
+    font-size: 0.9rem;
+    color: var(--text2);
+}
+
+.viewResultBtn {
+    background: none;
+    border: none;
+    color: var(--sidebar-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+    transition: opacity 0.15s;
+}
+
+.viewResultBtn:hover {
+    opacity: 0.75;
+}
+
+.goSubmitBtn {
+    background: none;
+    border: none;
+    color: var(--sidebar-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+    transition: opacity 0.15s;
+}
+
+.goSubmitBtn:hover {
+    opacity: 0.75;
+}

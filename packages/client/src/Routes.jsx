@@ -7,6 +7,7 @@ import Onboard from "./pages/Onboard/Onboard";
 import Courses from "./pages/Courses/Courses";
 import Course from "./pages/Course/Course";
 import Assignment from "./pages/Assignment/Assignment";
+import Assignments from "./pages/Assignments/Assignments";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Result from "./pages/Result/Result";
 import ProtectedRoute from "./components/Utils/ProtectedRoutes";
@@ -52,6 +53,14 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <Assignment />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="assignments"
+                    element={
+                        <ProtectedRoute>
+                            <Assignments />
                         </ProtectedRoute>
                     }
                 />

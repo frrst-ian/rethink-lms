@@ -20,10 +20,47 @@ const TABS = [
     { id: "submissions", label: "Submissions", icon: ClipboardList },
 ];
 
+function SubmissionViewerModal({ submission, onClose }) {
+    return (
+        <div className={styles.overlayModal} onClick={onClose}>
+            <div className={styles.viewerModal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.viewerHeader}>
+                    <div>
+                        <p className={styles.viewerName}>{submission.user.name}</p>
+                        <p className={styles.viewerEmail}>{submission.user.email}</p>
+                    </div>
+                    <button className={styles.viewerClose} onClick={onClose}>
+                        <X size={18} />
+                    </button>
+                </div>
+                <div className={styles.viewerBody}>
+                    {submission.fileUrl && (
+                        <FileViewer
+                            fileUrl={submission.fileUrl}
+                            fileType={submission.fileType}
+                            label="Submitted File"
+                        />
+                    )}
+                    {submission.content && (
+                        <div className={styles.viewerSection}>
+                            <p className={styles.viewerLabel}>Written Response</p>
+                            <p className={styles.viewerContent}>{submission.content}</p>
+                        </div>
+                    )}
+                    {!submission.fileUrl && !submission.content && (
+                        <p className={styles.viewerEmpty}>No content available.</p>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function SubmissionsTab({ assignmentId }) {
     const { submissions, setSubmissions, loading } = useAllSubmissions(assignmentId);
     const { reset, resettingId } = useResetSubmission(assignmentId);
     const [confirmId, setConfirmId] = useState(null);
+    const [viewing, setViewing] = useState(null);
 
     const handleReset = async (studentId) => {
         await reset(studentId, (id) => {
@@ -36,64 +73,78 @@ function SubmissionsTab({ assignmentId }) {
     if (submissions.length === 0) return <p className={styles.empty}>No submissions yet.</p>;
 
     return (
-        <div className={styles.submissionTable}>
-            <div className={styles.tableHeader}>
-                <span>Student</span>
-                <span>Submitted</span>
-                <span>AI Score</span>
-                <span>Status</span>
-                <span></span>
-            </div>
-            {submissions.map((s) => (
-                <div key={s.id} className={styles.tableRow}>
-                    <div className={styles.studentCell}>
-                        {s.user.profilePicture && (
-                            <img src={s.user.profilePicture} alt={s.user.name} width={26} height={26} className={styles.avatar} />
-                        )}
-                        <div>
-                            <p className={styles.studentName}>{s.user.name}</p>
-                            <p className={styles.studentEmail}>{s.user.email}</p>
-                        </div>
-                    </div>
-                    <span className={styles.dateCell}>
-                        {new Date(s.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
-                    </span>
-                    <span className={styles.scoreCell}>
-                        {s.result?.ai_percentage != null
-                            ? `${s.result.ai_percentage}%`
-                            : <span className={styles.skippedBadge}>Too short</span>}
-                    </span>
-                    <span>
-                        {s.result ? (
-                            s.result.isFlagged
-                                ? <span className={styles.flaggedBadge}>Flagged</span>
-                                : <span className={styles.cleanBadge}>Clean</span>
-                        ) : (
-                            <span className={styles.skippedBadge}>N/A</span>
-                        )}
-                    </span>
-                    <span className={styles.resetCell}>
-                        {confirmId === s.user.id ? (
-                            <div className={styles.confirmRow}>
-                                <span className={styles.confirmText}>Reset?</span>
-                                <button
-                                    className={styles.confirmYes}
-                                    onClick={() => handleReset(s.user.id)}
-                                    disabled={resettingId === s.user.id}
-                                >
-                                    {resettingId === s.user.id ? "..." : "Yes"}
-                                </button>
-                                <button className={styles.confirmNo} onClick={() => setConfirmId(null)}>No</button>
-                            </div>
-                        ) : (
-                            <button className={styles.resetBtn} onClick={() => setConfirmId(s.user.id)}>
-                                Reset
-                            </button>
-                        )}
-                    </span>
+        <>
+            <div className={styles.submissionTable}>
+                <div className={styles.tableHeader}>
+                    <span>Student</span>
+                    <span>Submitted</span>
+                    <span>AI Score</span>
+                    <span>Status</span>
+                    <span></span>
                 </div>
-            ))}
-        </div>
+                {submissions.map((s) => (
+                    <div
+                        key={s.id}
+                        className={styles.tableRow}
+                        onClick={() => setViewing(s)}
+                        style={{ cursor: "pointer" }}
+                    >
+                        <div className={styles.studentCell}>
+                            {s.user.profilePicture && (
+                                <img src={s.user.profilePicture} alt={s.user.name} width={26} height={26} className={styles.avatar} />
+                            )}
+                            <div>
+                                <p className={styles.studentName}>{s.user.name}</p>
+                                <p className={styles.studentEmail}>{s.user.email}</p>
+                            </div>
+                        </div>
+                        <span className={styles.dateCell}>
+                            {new Date(s.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                        <span className={styles.scoreCell}>
+                            {s.result?.ai_percentage != null
+                                ? `${s.result.ai_percentage}%`
+                                : <span className={styles.skippedBadge}>Too short</span>}
+                        </span>
+                        <span>
+                            {s.result ? (
+                                s.result.isFlagged
+                                    ? <span className={styles.flaggedBadge}>Flagged</span>
+                                    : <span className={styles.cleanBadge}>Clean</span>
+                            ) : (
+                                <span className={styles.skippedBadge}>N/A</span>
+                            )}
+                        </span>
+                        <span className={styles.resetCell} onClick={(e) => e.stopPropagation()}>
+                            {confirmId === s.user.id ? (
+                                <div className={styles.confirmRow}>
+                                    <span className={styles.confirmText}>Reset?</span>
+                                    <button
+                                        className={styles.confirmYes}
+                                        onClick={() => handleReset(s.user.id)}
+                                        disabled={resettingId === s.user.id}
+                                    >
+                                        {resettingId === s.user.id ? "..." : "Yes"}
+                                    </button>
+                                    <button className={styles.confirmNo} onClick={() => setConfirmId(null)}>No</button>
+                                </div>
+                            ) : (
+                                <button className={styles.resetBtn} onClick={() => setConfirmId(s.user.id)}>
+                                    Reset
+                                </button>
+                            )}
+                        </span>
+                    </div>
+                ))}
+            </div>
+
+            {viewing && (
+                <SubmissionViewerModal
+                    submission={viewing}
+                    onClose={() => setViewing(null)}
+                />
+            )}
+        </>
     );
 }
 

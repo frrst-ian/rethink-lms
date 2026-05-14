@@ -1,6 +1,14 @@
-import { LayoutDashboard, BookOpen, PanelLeftClose, PanelLeftOpen, LogOut } from "lucide-react";
+import {
+    LayoutDashboard,
+    BookOpen,
+    PanelLeftClose,
+    PanelLeftOpen,
+    LogOut,
+    ClipboardList,
+} from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import NotificationBell from "../NotificationBell/NotificationBell";
 import styles from "./sidebar.module.css";
 
 const NAV_ITEMS = [
@@ -27,7 +35,11 @@ export default function Sidebar({ open, setOpen }) {
                     onClick={() => setOpen((o) => !o)}
                     aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
                 >
-                    {open ? <PanelLeftClose size={18} strokeWidth={1.75} /> : <PanelLeftOpen size={18} strokeWidth={1.75} />}
+                    {open ? (
+                        <PanelLeftClose size={18} strokeWidth={1.75} />
+                    ) : (
+                        <PanelLeftOpen size={18} strokeWidth={1.75} />
+                    )}
                 </button>
             </div>
 
@@ -39,13 +51,38 @@ export default function Sidebar({ open, setOpen }) {
                     data-label={label}
                     aria-label={label}
                 >
-                    <Icon size={20} strokeWidth={1.75} className={styles.icon} />
+                    <Icon
+                        size={20}
+                        strokeWidth={1.75}
+                        className={styles.icon}
+                    />
                     <span className={styles.label}>{label}</span>
                 </Link>
             ))}
 
+            {user?.role === "student" && (
+                <Link
+                    to="/assignments"
+                    className={`${styles.navItem} ${pathname === "/assignments" ? styles.active : ""}`}
+                    data-label="Assignments"
+                    aria-label="Assignments"
+                >
+                    <ClipboardList
+                        size={20}
+                        strokeWidth={1.75}
+                        className={styles.icon}
+                    />
+                    <span className={styles.label}>Assignments</span>
+                </Link>
+            )}
             <div className={styles.bottom}>
-                <div className={styles.profile} data-label={user?.name} aria-label={user?.name}>
+                <NotificationBell sidebarOpen={open} />
+
+                <div
+                    className={styles.profile}
+                    data-label={user?.name}
+                    aria-label={user?.name}
+                >
                     <img
                         src={user?.profilePicture}
                         alt={user?.name}
@@ -65,7 +102,11 @@ export default function Sidebar({ open, setOpen }) {
                     data-label="Logout"
                     aria-label="Logout"
                 >
-                    <LogOut size={20} strokeWidth={1.75} className={styles.icon} />
+                    <LogOut
+                        size={20}
+                        strokeWidth={1.75}
+                        className={styles.icon}
+                    />
                     <span className={styles.label}>Logout</span>
                 </button>
             </div>
