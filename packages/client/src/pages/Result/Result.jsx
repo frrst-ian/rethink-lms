@@ -8,7 +8,6 @@ export default function Result() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // If navigated from submit, result is in state — otherwise fetch it
     const stateResult = location.state?.result;
     const { result: fetched, loading, error } = useSubmissionResult();
 
@@ -96,7 +95,15 @@ export default function Result() {
             {suggestion && (
                 <div className={`${styles.card} ${styles.suggestionCard}`}>
                     <p className={styles.cardLabel}>Feedback</p>
-                    <p className={styles.suggestionText}>{suggestion}</p>
+                    <p className={styles.suggestionText}>
+  {(suggestion || "")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/`(.*?)`/g, "$1")
+    .replace(/#{1,6}\s/g, "")
+    .replace(/>\s?/g, "")
+    .trim()}
+</p>
                 </div>
             )}
 

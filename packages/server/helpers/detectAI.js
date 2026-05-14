@@ -13,7 +13,7 @@ async function detectAI(content) {
         };
     }
 
-    const truncated = words.slice(0, 400).join(" ");
+    const truncated = words.slice(0, 300).join(" ");
 
     const output = await client.textClassification({
         model: "PirateXX/AI-Content-Detector",
