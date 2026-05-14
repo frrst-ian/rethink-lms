@@ -229,3 +229,87 @@
     background: var(--sidebar-hover);
     color: #ff6b6b;
 }
+
+/* Mobile */
+.mobileHeader {
+    display: none;
+}
+
+.overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        top: 52px;
+        height: calc(100vh - 52px);
+        transform: translateX(-100%);
+        width: 220px;
+        transition: transform 0.22s ease;
+    }
+
+    .sidebar.expanded {
+        transform: translateX(0);
+        width: 220px;
+    }
+
+    /* Always show labels on mobile drawer */
+    .sidebar .logo { display: block; opacity: 1; }
+    .sidebar .label { opacity: 1; }
+    .sidebar .profileInfo { opacity: 1; }
+    .sidebar .toggleBtn { display: none; }
+
+    /* Disable tooltip on mobile */
+    .navItem::after { display: none; }
+    .profile::after { display: none; }
+
+    .mobileHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 52px;
+        background: var(--s-background);
+        border-bottom: 1px solid #2a2840;
+        padding: 0 1rem;
+        z-index: 200;
+    }
+
+    .mobileLogo {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #e4eaeb;
+        letter-spacing: 0.02em;
+    }
+
+    .mobileMenuBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: none;
+        color: var(--text-sidebar);
+        cursor: pointer;
+        border-radius: 7px;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .mobileMenuBtn:hover {
+        background: var(--sidebar-hover);
+        color: #e4eaeb;
+    }
+
+    .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        top: 52px;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+    }
+}

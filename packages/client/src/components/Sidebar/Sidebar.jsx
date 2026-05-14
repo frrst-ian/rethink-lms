@@ -4,11 +4,11 @@ import {
     PanelLeftClose,
     PanelLeftOpen,
     LogOut,
-    ClipboardList,
+    Menu,
+    X,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import NotificationBell from "../NotificationBell/NotificationBell";
 import styles from "./sidebar.module.css";
 
 const NAV_ITEMS = [
@@ -27,89 +27,101 @@ export default function Sidebar({ open, setOpen }) {
     };
 
     return (
-        <nav className={`${styles.sidebar} ${open ? styles.expanded : ""}`}>
-            <div className={styles.header}>
-                <span className={styles.logo}>Rethink</span>
+        <>
+            {/* Mobile top bar */}
+            <header className={styles.mobileHeader}>
+                <span className={styles.mobileLogo}>Rethink</span>
                 <button
-                    className={styles.toggleBtn}
+                    className={styles.mobileMenuBtn}
                     onClick={() => setOpen((o) => !o)}
-                    aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+                    aria-label="Toggle menu"
                 >
                     {open ? (
-                        <PanelLeftClose size={18} strokeWidth={1.75} />
+                        <X size={20} strokeWidth={1.75} />
                     ) : (
-                        <PanelLeftOpen size={18} strokeWidth={1.75} />
+                        <Menu size={20} strokeWidth={1.75} />
                     )}
                 </button>
-            </div>
+            </header>
 
-            {NAV_ITEMS.map(({ icon: Icon, label, href }) => (
-                <Link
-                    key={label}
-                    to={href}
-                    className={`${styles.navItem} ${pathname === href ? styles.active : ""}`}
-                    data-label={label}
-                    aria-label={label}
-                >
-                    <Icon
-                        size={20}
-                        strokeWidth={1.75}
-                        className={styles.icon}
-                    />
-                    <span className={styles.label}>{label}</span>
-                </Link>
-            ))}
-
-            {user?.role === "student" && (
-                <Link
-                    to="/assignments"
-                    className={`${styles.navItem} ${pathname === "/assignments" ? styles.active : ""}`}
-                    data-label="Assignments"
-                    aria-label="Assignments"
-                >
-                    <ClipboardList
-                        size={20}
-                        strokeWidth={1.75}
-                        className={styles.icon}
-                    />
-                    <span className={styles.label}>Assignments</span>
-                </Link>
-            )}
-            <div className={styles.bottom}>
-                <NotificationBell sidebarOpen={open} />
-
+            {/* Mobile overlay */}
+            {open && (
                 <div
-                    className={styles.profile}
-                    data-label={user?.name}
-                    aria-label={user?.name}
-                >
-                    <img
-                        src={user?.profilePicture}
-                        alt={user?.name}
-                        width={28}
-                        height={28}
-                        className={styles.avatar}
-                    />
-                    <div className={styles.profileInfo}>
-                        <p className={styles.profileName}>{user?.name}</p>
-                        <p className={styles.profileRole}>{user?.role}</p>
-                    </div>
+                    className={styles.overlay}
+                    onClick={() => setOpen(false)}
+                />
+            )}
+
+            {/* Sidebar */}
+            <nav className={`${styles.sidebar} ${open ? styles.expanded : ""}`}>
+                <div className={styles.header}>
+                    <span className={styles.logo}>Rethink</span>
+                    <button
+                        className={styles.toggleBtn}
+                        onClick={() => setOpen((o) => !o)}
+                        aria-label={
+                            open ? "Collapse sidebar" : "Expand sidebar"
+                        }
+                    >
+                        {open ? (
+                            <PanelLeftClose size={18} strokeWidth={1.75} />
+                        ) : (
+                            <PanelLeftOpen size={18} strokeWidth={1.75} />
+                        )}
+                    </button>
                 </div>
 
-                <button
-                    className={`${styles.navItem} ${styles.logoutBtn}`}
-                    onClick={handleLogout}
-                    data-label="Logout"
-                    aria-label="Logout"
-                >
-                    <LogOut
-                        size={20}
-                        strokeWidth={1.75}
-                        className={styles.icon}
-                    />
-                    <span className={styles.label}>Logout</span>
-                </button>
-            </div>
-        </nav>
+                {NAV_ITEMS.map(({ icon: Icon, label, href }) => (
+                    <Link
+                        key={label}
+                        to={href}
+                        className={`${styles.navItem} ${pathname === href ? styles.active : ""}`}
+                        data-label={label}
+                        aria-label={label}
+                        onClick={() => setOpen(false)}
+                    >
+                        <Icon
+                            size={20}
+                            strokeWidth={1.75}
+                            className={styles.icon}
+                        />
+                        <span className={styles.label}>{label}</span>
+                    </Link>
+                ))}
+
+                <div className={styles.bottom}>
+                    <div
+                        className={styles.profile}
+                        data-label={user?.name}
+                        aria-label={user?.name}
+                    >
+                        <img
+                            src={user?.profilePicture}
+                            alt={user?.name}
+                            loading="lazy"
+                            className={styles.avatar}
+                        />
+                        <div className={styles.profileInfo}>
+                            <p className={styles.profileName}>{user?.name}</p>
+                            <p className={styles.profileRole}>{user?.role}</p>
+                        </div>
+                    </div>
+
+                    <button
+                        className={`${styles.navItem} ${styles.logoutBtn}`}
+                        onClick={handleLogout}
+                        data-label="Logout"
+                        aria-label="Logout"
+                    >
+                        <LogOut
+                            size={20}
+                            strokeWidth={1.75}
+                            className={styles.icon}
+                        />
+                        <span className={styles.label}>Logout</span>
+                    </button>
+                </div>
+            </nav>
+        </>
     );
 }

@@ -1,0 +1,10 @@
+.content {
+    transition: padding-left 0.22s ease;
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding-left: 0 !important;
+        padding-top: 52px;
+    }
+}

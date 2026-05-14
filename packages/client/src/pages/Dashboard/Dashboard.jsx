@@ -237,8 +237,8 @@ function StudentDashboard({ data }) {
 
             <div className={styles.section}>
                 <p className={styles.sectionLabel}>
-                    <CalendarClock size={14} strokeWidth={1.75} />
-                    Due This Week
+                    <CalendarClock size={20} strokeWidth={1.75} />
+                    <p>Due This Week</p>    
                 </p>
                 {data.upcomingAssignments.length === 0 ? (
                     <p className={styles.empty}>No assignments due in the next 7 days.</p>

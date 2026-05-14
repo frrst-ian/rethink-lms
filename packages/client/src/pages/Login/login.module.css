@@ -148,22 +148,26 @@ hr.line {
     left: 10rem;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 960px) {
+    .left {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
     .loginContainer {
-        font-size: 0.88rem;
+        padding: 1.5rem 1.25rem;
+        height: auto;
+        min-height: 100vh;
+        align-items: center;
     }
 
-    .loginInput {
-        height: 34.4px;
+    .loginFormContainer {
+        width: 100%;
     }
 
     form.loginForm {
         width: 100%;
-        font-size: 1rem;
-    }
-
-    .loginContainer {
-        padding: 1.2rem;
     }
 
     .oauthLogin {
@@ -172,11 +176,5 @@ hr.line {
 
     .loginHeader {
         font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 960px) {
-    .left {
-        display: none;
     }
 }

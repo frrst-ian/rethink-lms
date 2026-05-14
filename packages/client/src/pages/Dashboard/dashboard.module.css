@@ -199,7 +199,7 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-sidebar);
@@ -281,4 +281,47 @@
     font-size: 0.875rem;
     color: var(--text-sidebar);
     padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .dashWrapper {
+        padding: 1.25rem 1rem;
+    }
+
+    .pageTitle {
+        font-size: 1.5rem;
+    }
+
+    .statGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chartsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .trendCard {
+        max-width: 100%;
+    }
+
+    .submissionRow {
+        max-width: 100%;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .subMeta {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .statGrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+    }
+
+    .statValue {
+        font-size: 1.5rem;
+    }
 }
