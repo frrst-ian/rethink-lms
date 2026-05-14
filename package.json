@@ -10,7 +10,9 @@
     "dev:server": "npm run dev -w packages/server"
   },
   "devDependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.0.0",
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "axios": "^1.13.6",
