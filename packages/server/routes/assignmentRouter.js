@@ -6,6 +6,12 @@ const requireRole = require("../middleware/requireRole");
 const { upload } = require("../config/cloudinary");
 
 assignmentRouter.get(
+    "/",
+    authenticateJwt,
+    requireRole("student", "teacher"),
+    assignmentController.getAllAssignments,
+);
+assignmentRouter.get(
     "/:id/submissions",
     authenticateJwt,
     requireRole("teacher"),

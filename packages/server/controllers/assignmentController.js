@@ -1,5 +1,6 @@
 const db = require("../db/assignmentModel");
 const resultModel = require("../db/resultModel");
+const notificationModel = require("../db/notificationModel");
 const prisma = require("../lib/prisma");
 const { uploadToCloudinary } = require("../config/cloudinary");
 const extractText = require("../helpers/extractText");
@@ -47,6 +48,42 @@ async function getAssignment(req, res) {
     return res.json(assignment);
 }
 
+async function getAllAssignments(req, res) {
+    const userId = req.user.id;
+    const role = req.user.role;
+
+    if (role === "teacher") {
+        const assignments = await prisma.assignment.findMany({
+            where: { userId },
+            include: {
+                course: { select: { id: true, title: true, section: true } },
+                _count: { select: { submissions: true } },
+            },
+            orderBy: { dueDate: "asc" },
+        });
+        return res.json(assignments);
+    }
+
+    const enrollments = await prisma.enrollment.findMany({
+        where: { userId },
+        select: { courseId: true },
+    });
+    const courseIds = enrollments.map((e) => e.courseId);
+
+    const assignments = await prisma.assignment.findMany({
+        where: { courseId: { in: courseIds } },
+        include: {
+            course: { select: { id: true, title: true, section: true } },
+            submissions: {
+                where: { userId },
+                select: { id: true, submittedAt: true, result: { select: { ai_percentage: true, isFlagged: true } } },
+            },
+        },
+        orderBy: { dueDate: "asc" },
+    });
+    return res.json(assignments);
+}
+
 async function submitAssignment(req, res) {
     let fileUrl = null;
     let fileType = null;
@@ -87,6 +124,17 @@ async function submitAssignment(req, res) {
     );
     ensureExists(submission, "Submitted Assignment");
 
+    const student = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { name: true },
+    });
+
+    await notificationModel.createNotification(
+        assignment.userId,
+        `${student.name} submitted "${assignment.title}"`,
+        `/courses/${assignment.courseId}/assignments/${assignmentId}`,
+    );
+
     let textContent = content;
     if (!textContent && fileUrl && fileType) {
         textContent = await extractText(fileUrl, fileType);
@@ -105,6 +153,12 @@ async function submitAssignment(req, res) {
         if (detection.isFlagged) {
             const suggestionText = await generateSuggestion(textContent);
             await resultModel.createSuggestion(result.id, suggestionText);
+
+            await notificationModel.createNotification(
+                assignment.userId,
+                `${student.name}'s submission for "${assignment.title}" was flagged as AI-generated`,
+                `/courses/${assignment.courseId}/assignments/${assignmentId}`,
+            );
         }
 
         return res.status(201).json({
@@ -143,4 +197,5 @@ module.exports = {
     submitAssignment,
     resetSubmission,
     getAssignment,
+    getAllAssignments,
 };

@@ -1,5 +1,7 @@
 const { uploadToCloudinary } = require("../config/cloudinary");
 const db = require("../db/courseModel");
+const notificationModel = require("../db/notificationModel");
+const prisma = require("../lib/prisma");
 const { validateId, ensureExists } = require("../helpers/validators");
 
 async function getAllCourses(req, res) {
@@ -38,22 +40,16 @@ async function enrollStudent(req, res) {
     ensureExists(course, "Course");
 
     if (course.userId === userId) {
-        return res
-            .status(403)
-            .json({ errors: ["Teachers cannot enroll in their own course."] });
+        return res.status(403).json({ errors: ["Teachers cannot enroll in their own course."] });
     }
 
     const existingEnrollment = await db.checkEnrollment(userId, courseId);
     if (existingEnrollment) {
-        return res
-            .status(409)
-            .json({ errors: ["Already enrolled in this course."] });
+        return res.status(409).json({ errors: ["Already enrolled in this course."] });
     }
 
     await db.enrollStudent(userId, courseId);
-    return res
-        .status(201)
-        .json({ message: "Successfully enrolled in course", courseId, userId });
+    return res.status(201).json({ message: "Successfully enrolled in course", courseId, userId });
 }
 
 async function getAssignmentById(req, res) {
@@ -92,15 +88,23 @@ async function createAssignment(req, res) {
     }
 
     const newAssignment = await db.createAssignment(
-        title,
-        description,
-        dueDate,
-        courseId,
-        userId,
-        fileUrl,
-        fileType,
-        originalName,
+        title, description, dueDate, courseId, userId, fileUrl, fileType, originalName,
     );
+
+    const enrollments = await prisma.enrollment.findMany({
+        where: { courseId },
+        select: { userId: true },
+    });
+    const studentIds = enrollments.map((e) => e.userId);
+
+    if (studentIds.length > 0) {
+        await notificationModel.createManyNotifications(
+            studentIds,
+            `New assignment "${title}" posted in ${course.title}`,
+            `/courses/${courseId}/assignments/${newAssignment.id}`,
+        );
+    }
+
     return res.status(201).json(newAssignment);
 }
 

@@ -26,7 +26,7 @@ app.use(
             }
         },
         credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
         optionsSuccessStatus: 200,
     }),
@@ -37,6 +37,7 @@ const courseRouter = require("./routes/courseRouter");
 const assignmentRouter = require("./routes/assignmentRouter");
 const submissionRouter = require("./routes/submissionRouter");
 const dashboardRouter = require("./routes/dashboardRouter");
+const notificationRouter = require("./routes/notificationRouter");
 
 const errorHandler = require("./middleware/errorHandler");
 
@@ -46,6 +47,7 @@ app.use("/api/courses", courseRouter);
 app.use("/api/assignments", assignmentRouter);
 app.use("/api/submissions", submissionRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/notifications", notificationRouter);
 
 app.use(errorHandler);
 

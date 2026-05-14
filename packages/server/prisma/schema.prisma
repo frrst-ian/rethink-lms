@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id             Int          @id @default(autoincrement())
-  email          String       @unique
+  id             Int            @id @default(autoincrement())
+  email          String         @unique
   name           String
   password       String
   role           String?
   profilePicture String?
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime       @default(now())
   assignments    Assignment[]
   enrollments    Enrollment[]
   submissions    Submission[]
-  courses        Course[]     @relation("CourseCreator")
+  courses        Course[]       @relation("CourseCreator")
   materials      Material[]
+  notifications  Notification[]
 
   @@map("user")
 }
@@ -118,4 +119,16 @@ model Material {
   author       User     @relation(fields: [userId], references: [id])
 
   @@map("material")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notification")
 }
