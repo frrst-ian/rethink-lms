@@ -1,11 +1,13 @@
 require("dotenv").config();
-const { PrismaPg } = require("@prisma/adapter-pg");
-const { PrismaClient } = require("../generated/prisma/client.js");
+const { PrismaClient } = require("@prisma/client");
 
-const connectionString = `${process.env.DATABASE_URL}`;
-
-// Add ssl: unauth: true for render later
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: `${process.env.DATABASE_URL}?sslmode=require`,
+    },
+  },
+  log: ["error", "warn"],
+});
 
 module.exports = prisma;
