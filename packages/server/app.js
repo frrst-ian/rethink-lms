@@ -9,7 +9,7 @@ const getAllowedOrigins = () => {
     if (NODE_ENV === "development") {
         return ["http://localhost:5173", "http://localhost:5174"];
     }
-    return ["https://rethinklms.netlify.app/login"];
+    return ["https://rethinklms.netlify.app"];
 };
 
 app.use(
