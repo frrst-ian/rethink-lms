@@ -49,6 +49,10 @@ app.use("/api/submissions", submissionRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/notifications", notificationRouter);
 
+app.get("/api", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.use(errorHandler);
 
 module.exports = app;
