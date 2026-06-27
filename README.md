@@ -1,14 +1,35 @@
 # Rethink LMS
 
-A full-stack Learning Management System with AI-powered academic integrity detection. Built as a thesis project exploring predictive AI integration in educational platforms.
+A learning management system with AI-powered academic integrity detection. Built as a thesis project.
 
-## Overview
+## What it does
 
-Rethink LMS enables teachers to create and manage courses, upload assignments, and review student submissions — with automatic AI-generated content detection on every submission. Flagged submissions receive AI-generated feedback to guide students toward original work.
+Teachers create courses, post assignments, and review student submissions. Every submission gets scanned by an AI detection model. Flagged work receives generated feedback pointing students toward original thinking.
 
-## Getting Started
+Students enroll via course codes, submit text or file uploads, and see their AI score instantly after submitting.
 
-Create `packages/server/.env` with the following:
+## Stack
+
+- **Frontend:** React, Vite, Recharts
+- **Backend:** Node.js, Express
+- **Database:** PostgreSQL (Neon) via Prisma ORM
+- **Auth:** JWT, Google OAuth
+- **Storage:** Cloudinary
+- **AI:** Hugging Face Inference API (`PirateXX/AI-Content-Detector`, `Qwen2.5-72B`)
+
+## Features
+
+- Role-based access for teachers and students
+- Assignment file attachments (PDF, DOCX)
+- AI detection with flagging threshold and feedback generation
+- Teacher dashboard with weekly AI usage trends and submission analytics
+- Notification system for assignment posts and submissions
+- Course materials library
+
+## Setup
+
+Create `packages/server/.env`:
+
 ```env
 DATABASE_URL=
 JWT_SECRET=
@@ -22,10 +43,8 @@ HF_TOKEN=
 CLIENT_URL=
 ```
 
-Then:
 ```bash
 npm install
 cd packages/server && npx prisma migrate dev
-node prisma/seed.js
 npm run dev
 ```
