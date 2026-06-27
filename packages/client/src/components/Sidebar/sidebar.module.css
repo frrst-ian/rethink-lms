@@ -234,7 +234,6 @@
     color: #ff6b6b;
 }
 
-/* Mobile */
 .mobileHeader {
     display: none;
 }
@@ -257,13 +256,11 @@
         width: 220px;
     }
 
-    /* Always show labels on mobile drawer */
     .sidebar .logo { display: block; opacity: 1; }
     .sidebar .label { opacity: 1; }
     .sidebar .profileInfo { opacity: 1; }
     .sidebar .toggleBtn { display: none; }
 
-    /* Disable tooltip on mobile */
     .navItem::after { display: none; }
     .profile::after { display: none; }
 

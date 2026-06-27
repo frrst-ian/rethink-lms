@@ -10,6 +10,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./sidebar.module.css";
+import NotificationBell from "../NotificationBell/NotificationBell";
 
 const NAV_ITEMS = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
@@ -28,7 +29,6 @@ export default function Sidebar({ open, setOpen }) {
 
     return (
         <>
-            {/* Mobile top bar */}
             <header className={styles.mobileHeader}>
                 <span className={styles.mobileLogo}>Rethink</span>
                 <button
@@ -44,7 +44,6 @@ export default function Sidebar({ open, setOpen }) {
                 </button>
             </header>
 
-            {/* Mobile overlay */}
             {open && (
                 <div
                     className={styles.overlay}
@@ -89,7 +88,9 @@ export default function Sidebar({ open, setOpen }) {
                     </Link>
                 ))}
 
+
                 <div className={styles.bottom}>
+                <NotificationBell sidebarOpen={open} /> 
                     <div
                         className={styles.profile}
                         data-label={user?.name}
